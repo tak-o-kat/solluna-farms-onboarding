@@ -1,5 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { isMobile } from "react-device-detect";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import Link from "next/link";
 import Logo from "@/components/icons/Logo";
 import {
@@ -7,54 +11,41 @@ import {
   ChevronRight,
   LucideLayoutDashboard,
   Wallet2Icon,
-  Settings2Icon,
+  Activity,
   LucideLogOut,
 } from "lucide-react";
-import { Component, useState } from "react";
 
 export default function SideMenu() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  //const { user, isAuthenticated, isLoading } = useKindeBrowserClient();
 
   const sideBarToggle = () => {
     setOpen(() => !open);
   };
 
-  const toggleLinkTitle = (title: string): any => {
-    if (open) {
-      setTimeout(() => {
-        return <span className="">{title}</span>;
-      }, 300);
-    } else {
-    }
-  };
+  useEffect(() => {
+    setOpen(!isMobile);
+  }, []);
 
   return (
     <aside
       className={`${
         open
-          ? "relative left-0 sm:left-0 sm:w-64 "
-          : "relative -left-[91px] sm:left-0 w-[90px]"
-      } duration-300 z-10 bg-background border-r text-lg sm:min-h-screen`}
+          ? "relative left-0 sm:left-0 sm:w-72 "
+          : "relative -left-[90px] sm:left-0 w-0 sm:w-[90px]"
+      } duration-200 z-10 bg-background border-r text-lg`}
     >
       <div
         className={`${open ? "w-64" : "w-0 sm:w-[90px]"} flex flex-col h-full`}
       >
-        <div className="h-20 px-5 flex flex-row items-center">
-          <div className="flex flex-row justify-start items-center gap-4">
+        <div className="h-20 px-5 flex flex-row items-center border-b">
+          <div className="flex flex-row justify-center items-center gap-4 ps-1">
             <div className="h-10 w-10 flex justify-center items-center border border-cyan-500 rounded-lg">
               <div className="h-7 w-7 text-cyan-500">
                 <Logo />
               </div>
             </div>
-            <span
-              className={`${
-                !open
-                  ? "transition ease-in duration-100 hidden"
-                  : "transition ease-in duration-300 visible"
-              } `}
-            >
-              Solluna
-            </span>
+            <span className={`${!open && "hidden"}`}>Solluna</span>
           </div>
           <button
             className={`${
@@ -103,7 +94,7 @@ export default function SideMenu() {
                       : "transition-opacity ease-in duration-300 opacity-100"
                   } `}
                 >
-                  Dashboard
+                  Accounts
                 </span>
               </Link>
             </li>
@@ -113,7 +104,7 @@ export default function SideMenu() {
               } h-16 flex items-center p-[23px] font-normal hover:text-zinc-800 hover:bg-[hsl(186,61%,94%)] dark:hover:text-zinc-200 dark:hover:bg-[hsl(186,27%,35%)]`}
             >
               <Link className="flex items-center space-x-4" href="#">
-                <Settings2Icon className="h-5 w-5" />
+                <Activity className="h-5 w-5" />
                 <span
                   className={`${
                     !open
@@ -121,7 +112,7 @@ export default function SideMenu() {
                       : "transition-opacity ease-in duration-300 opacity-100"
                   } `}
                 >
-                  Dashboard
+                  Analytics
                 </span>
               </Link>
             </li>
@@ -132,7 +123,7 @@ export default function SideMenu() {
                 open ? "justify-start" : "w-16"
               } h-16 flex items-center p-[23px] hover:text-zinc-800 hover:bg-[hsl(186,61%,94%)] dark:hover:text-zinc-200 dark:hover:bg-[hsl(186,27%,35%)]`}
             >
-              <Link className="flex items-center space-x-4" href="#">
+              <LogoutLink className="flex items-center space-x-4">
                 <LucideLogOut className="h-5 w-5" />
                 <span
                   className={`${
@@ -143,7 +134,7 @@ export default function SideMenu() {
                 >
                   Logout
                 </span>
-              </Link>
+              </LogoutLink>
             </li>
           </ul>
         </div>

@@ -9,9 +9,9 @@ export default function DashboardLayout({
   return (
     <div className="flex flex-row min-h-screen overflow-hidden">
       <SideMenu />
-      <div className="relative flex flex-col flex-1">
+      <div className="flex flex-col w-full">
         <NavBar />
-        <div className="relative flex flex-row h-full w-full">{children}</div>
+        <div className="flex flex-row h-full w-full">{children}</div>
       </div>
     </div>
   );
