@@ -10,7 +10,7 @@ export default async function Dashboard() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen justify-between items-center text-xl p-24">
+    <div className="relative top-[5rem] -left-[90px] sm:left-0 flex flex-col h-full w-full text-xl">
       <h1 className="">Dashboard</h1>
     </div>
   );
