@@ -11,7 +11,7 @@ export default async function Dashboard() {
 
   return (
     <div className="flex flex-col w-full justify-center items-center text-xl">
-      <h1 className="flex flex-col h-full p-5">Dashboard</h1>
+      <div className="flex flex-col h-full p-5">Dashboard</div>
     </div>
   );
 }
