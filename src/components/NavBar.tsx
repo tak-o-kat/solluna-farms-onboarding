@@ -1,7 +1,5 @@
 "use client";
 
-import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
 import { Settings } from "./Settings";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
