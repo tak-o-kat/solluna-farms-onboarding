@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { schema } from "@/app/survey/[...id]/registrationSchema";
 
-export async function Post(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const data = await req.json();
   const parsed = schema.safeParse(data);
 
