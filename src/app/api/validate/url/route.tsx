@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { schema } from "@/app/survey/registrationSchema";
+import { schema } from "@/app/survey/[...id]/registrationSchema";
 
 export async function Post(req: NextRequest) {
   const data = await req.json();
