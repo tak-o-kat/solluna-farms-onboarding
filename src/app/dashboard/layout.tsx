@@ -1,6 +1,7 @@
-import NavBar from "@/components/NavBar";
-import SideMenu from "@/components/SideMenu";
+import DashboardMenu from "@/components/DashboardMenu";
+import DashboardNavBar from "@/components/DashboardNavBar";
 
+// "grid min-h-screen md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]"
 export default function DashboardLayout({
   children,
 }: Readonly<{
@@ -8,10 +9,10 @@ export default function DashboardLayout({
 }>) {
   return (
     <div className="flex flex-row min-h-screen overflow-hidden">
-      <SideMenu />
+      <DashboardMenu />
       <div className="flex flex-col w-full">
-        <NavBar />
-        <div className="flex flex-row h-full w-full">{children}</div>
+        <DashboardNavBar />
+        {children}
       </div>
     </div>
   );

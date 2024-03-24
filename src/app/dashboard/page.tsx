@@ -1,3 +1,4 @@
+import Surveys from "@/components/Surveys";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -10,8 +11,8 @@ export default async function Dashboard() {
   }
 
   return (
-    <div className="flex flex-col w-full justify-center items-center text-xl">
-      <div className="flex flex-col h-full p-5">Dashboard</div>
-    </div>
+    <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+      <Surveys />
+    </main>
   );
 }
