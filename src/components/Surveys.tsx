@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { SurveyLinkTable } from "@/components/surveyTab/SurveyLinkTable";
+
 export default function Surveys() {
   return (
-    <div className="flex flex-col flex-1 items-center">
+    <div className="flex flex-col flex-1">
+      <div className="flex sm:text-lg pb-3">Survey</div>
       <Tabs
         defaultValue="table"
         className="flex flex-col flex-1 justify-center items-center h-full w-full space-y-4"
@@ -12,8 +15,10 @@ export default function Surveys() {
           <TabsTrigger value="table">Table</TabsTrigger>
           <TabsTrigger value="generator">Generator</TabsTrigger>
         </TabsList>
-        <div className="flex flex-col flex-1 w-full items-center justify-center rounded-lg border shadow-sm">
-          <TabsContent value="table">My table here</TabsContent>
+        <div className="flex flex-col flex-1 w-full items-center rounded-lg border shadow-sm">
+          <TabsContent value="table" className="flex w-full p-3 sm:p-10">
+            <SurveyLinkTable />
+          </TabsContent>
           <TabsContent value="generator">
             <div className="flex flex-col items-center gap-1 text-center">
               <h3 className="text-2xl font-bold tracking-tight">
