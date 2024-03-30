@@ -20,13 +20,20 @@
 .DS_Store
 *.pem
 
+# prisms
+prisma/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
+
+# docker compose
+docker-compose.yaml
 
 # vercel
 .vercel

@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { nanoid } from "nanoid";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -37,47 +36,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "open",
-    email: `https://localhost.com:3000/survey/${nanoid()}`,
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "open",
-    email: `https://localhost.com:3000/survey/${nanoid()}`,
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: `https://localhost.com:3000/survey/${nanoid()}`,
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "processing",
-    email: `https://localhost.com:3000/survey/${nanoid()}`,
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "completed",
-    email: `https://localhost.com:3000/survey/${nanoid()}`,
-  },
-];
+import { type TableData } from "../Surveys";
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "open" | "processing" | "success" | "completed";
-  email: string;
-};
-
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<TableData>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -108,33 +69,29 @@ export const columns: ColumnDef<Payment>[] = [
     ),
   },
   {
-    accessorKey: "email",
+    accessorKey: "url",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Link
+          Url
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.getValue("url")}</div>,
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "createdAt",
+    header: () => <div className="text-right">Created</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
+      const created: string = row.getValue("createdAt");
 
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
+      return (
+        <div className="text-right font-medium">{created.slice(0, 10)}</div>
+      );
     },
   },
   {
@@ -168,7 +125,8 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ];
 
-export function SurveyLinkTable() {
+export function SurveyLinkTable({ data }: { data: TableData[] }) {
+  console.log("table");
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -201,9 +159,9 @@ export function SurveyLinkTable() {
       <div className="flex items-center py-4 w-full">
         <Input
           placeholder="Filter survey link..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("url")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("url")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

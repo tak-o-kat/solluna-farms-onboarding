@@ -4,6 +4,8 @@ import { z } from "zod";
 import { schema } from "./registrationSchema";
 import { SurveyForm } from "./SurveyForm";
 
+import { makeSurveyUrl } from "@/utils/urlBuilder";
+
 export default async function SurveyPage({
   params,
 }: {
@@ -12,11 +14,6 @@ export default async function SurveyPage({
   if (params.id.length !== 1) {
     redirect("/not-found");
   }
-
-  // const headersList = headers();
-  // const proto = headersList.get("x-forwarded-proto");
-  // const uri = headersList.get("x-forwarded-host");
-  // const url = `${proto}://${uri}/survey/${nanoid()}`;
 
   const onFormAction = async (
     prevState: {
