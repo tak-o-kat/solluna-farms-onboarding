@@ -3,9 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useFormState } from "react-dom";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { z } from "zod";
-import { PrismaClient } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,12 +13,10 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
 import { schema } from "./urlSchema";
-import { stat } from "fs";
 import { Loader2Icon } from "lucide-react";
 
 type FormSchema = z.infer<typeof schema>;
@@ -61,6 +58,7 @@ export const SurveyLinkGenerator = ({
 
   return (
     <Form {...form}>
+      {state?.message}
       <form
         ref={formRef}
         action={formAction}
