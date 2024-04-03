@@ -66,7 +66,7 @@ export const SurveyLinkGenerator = ({
       toast(`Generated ${state?.numLinks} Urls`, {
         description: "Url's located in Survey table!",
       });
-    } else {
+    } else if (state.status === 400) {
       toast(`${state?.message}`);
     }
   }, [state]);
