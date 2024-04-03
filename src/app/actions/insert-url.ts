@@ -28,20 +28,24 @@ export const insertUrl = async (
         data: query,
       });
 
-      revalidatePath("/dashboard");
       return {
+        status: 200,
         message: "successfully sent to server and db",
-        user: newUrls,
+        numLinks: newUrls.count,
       };
     } catch (err: any) {
       console.log(err.message);
       return {
+        status: 400,
         name: err.name,
         message: err?.message,
       };
+    } finally {
+      revalidatePath("/dashboard");
     }
   } else {
     return {
+      status: 400,
       message: "Invalid data",
       issues: parsed.error.issues.map((issue) => issue.message),
     };

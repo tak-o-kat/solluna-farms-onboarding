@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useFormState } from "react-dom";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import {
 
 import { schema } from "./urlSchema";
 import { Loader2Icon } from "lucide-react";
+import { toast } from "sonner";
 
 type FormSchema = z.infer<typeof schema>;
 
@@ -26,13 +27,17 @@ export const SurveyLinkGenerator = ({
 }: {
   onFormAction: (
     prevState: {
+      status?: number;
       message: string;
+      numLinks?: number;
       data?: z.infer<typeof schema>;
       issues?: string[];
     },
     data: FormData
   ) => Promise<{
+    status?: number;
     message: string;
+    numLinks?: number;
     data?: z.infer<typeof schema>;
     issues?: string[];
   }>;
@@ -56,9 +61,18 @@ export const SurveyLinkGenerator = ({
     setIsLoading(!isLoading);
   };
 
+  useEffect(() => {
+    if (state.status === 200) {
+      toast(`Generated ${state?.numLinks} Urls`, {
+        description: "Url's located in Survey table!",
+      });
+    } else {
+      toast(`${state?.message}`);
+    }
+  }, [state]);
+
   return (
     <Form {...form}>
-      {state?.message}
       <form
         ref={formRef}
         action={formAction}

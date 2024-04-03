@@ -126,7 +126,6 @@ export const columns: ColumnDef<TableData>[] = [
 ];
 
 export function SurveyLinkTable({ data }: { data: TableData[] }) {
-  console.log("table");
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

@@ -14,10 +14,10 @@ export type TableData = {
 
 async function getUrlList() {
   const url = getUrlListApi();
+  console.log("Getting Table data from DB");
   const resp = await fetch(url, {
     method: "GET",
   });
-
   return resp.json();
 }
 
