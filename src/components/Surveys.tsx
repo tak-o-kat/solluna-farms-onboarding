@@ -1,5 +1,5 @@
-import { SurveyLinkTable } from "@/components/surveyTab/SurveyLinkTable";
-import { SurveyLinkGenerator } from "./surveyTab/SurveyLinkGenerator";
+import { SurveyLinkTable } from "@/components/surveysPage/SurveyLinkTable";
+import { SurveyLinkGenerator } from "./surveysPage/SurveyLinkGenerator";
 import { getUrlListApi } from "@/utils/urlBuilder";
 import { insertUrl } from "@/app/actions/url-table";
 

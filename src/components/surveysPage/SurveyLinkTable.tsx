@@ -64,17 +64,21 @@ export const columns: ColumnDef<TableData>[] = [
     accessorKey: "status",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="flex justify-center">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Status
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="capitalize flex justify-center">
+        {row.getValue("status")}
+      </div>
     ),
   },
   {
@@ -95,7 +99,7 @@ export const columns: ColumnDef<TableData>[] = [
   },
   {
     accessorKey: "isCopied",
-    header: () => <div className="flex justify-center ">Copied</div>,
+    header: () => <div className="flex justify-center ">Clipboard</div>,
     cell: ({ row }) => {
       const tableRow = row.original;
       return (

@@ -1,12 +1,13 @@
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Bell,
   Home,
   LineChart,
-  Link2,
+  FileCog,
   Package2,
   ShoppingCart,
-  Users,
+  Wallet,
   LogOut,
 } from "lucide-react";
 
@@ -14,6 +15,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export default function DashboardMenu() {
+  const pathname = usePathname();
+
   return (
     <div className="hidden border-r bg-muted/40 md:block w-80">
       <div className="flex h-full max-h-screen flex-col gap-2">
@@ -26,39 +29,40 @@ export default function DashboardMenu() {
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
             <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              href="/dashboard"
+              className={`${
+                pathname === "/dashboard" && "bg-muted text-primary"
+              } flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
             >
               <Home className="h-4 w-4" />
               Dashboard
             </Link>
             <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              href="/dashboard/accounts"
+              className={`${
+                pathname === "/dashboard/accounts" && "bg-muted text-primary"
+              } flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
             >
-              <ShoppingCart className="h-4 w-4" />
+              <Wallet className="h-4 w-4" />
               Accounts
             </Link>
             <Link
-              href="#"
-              className={`${"bg-muted text-primary"} flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:text-primary`}
+              href="/dashboard/surveys"
+              className={`${
+                pathname === "/dashboard/surveys" && "bg-muted text-primary"
+              } flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:text-primary`}
             >
-              <Link2 className="h-4 w-4" />
+              <FileCog className="h-4 w-4" />
               Surveys{" "}
               <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                 4
               </Badge>
             </Link>
             <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Users className="h-4 w-4" />
-              Customers
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              href="/dashboard/analytics"
+              className={`${
+                pathname === "/dashboard/analytics" && "bg-muted text-primary"
+              } flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
             >
               <LineChart className="h-4 w-4" />
               Analytics

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
-import { schema } from "@/components/surveyTab/urlSchema";
+import { schema } from "@/components/surveysPage/urlSchema";
 import { generateInsertUrlQuery } from "@/utils/queryBuilder";
 
 // Form Actions
@@ -45,6 +45,7 @@ export const insertUrl = async (
       prisma.$disconnect;
     }
   } else {
+    prisma.$disconnect;
     return {
       status: 400,
       message: "Invalid data",

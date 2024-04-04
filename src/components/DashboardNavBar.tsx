@@ -14,6 +14,8 @@ import {
   ShoppingCart,
   Users,
   LogOut,
+  ChevronLeft,
+  UserPlus,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -32,10 +34,15 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
+  DropdownMenuSubContent,
+  DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { DropdownMenuSubTrigger } from "@radix-ui/react-dropdown-menu";
 
 export default function DashboardNavBar() {
   const { setTheme } = useTheme();
@@ -71,7 +78,7 @@ export default function DashboardNavBar() {
                 Dashboard
               </Link>
               <Link
-                href="#"
+                href="/dashboard"
                 className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
               >
                 <ShoppingCart className="h-5 w-5" />
@@ -137,15 +144,31 @@ export default function DashboardNavBar() {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setTheme("light")}>
-              Light
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme("dark")}>
-              Dark
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme("system")}>
-              System
-            </DropdownMenuItem>
+            <DropdownMenuGroup>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger className="flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent">
+                  <div className="flex flex-row items-center">
+                    <ChevronLeft className="mr-2 h-4 w-4" />
+                    <span className="text-sm">Theme</span>
+                  </div>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuItem onClick={() => setTheme("light")}>
+                      <span>Light</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("dark")}>
+                      <span>Dark</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setTheme("system")}>
+                      <span>System</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+            </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogoutLink>Logout</LogoutLink>
