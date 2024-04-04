@@ -42,6 +42,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenuSubTrigger } from "@radix-ui/react-dropdown-menu";
+import DynamicBreadCrumb from "./DynamicBreadCrumb";
 
 export default function DashboardNavBar() {
   const { setTheme } = useTheme();
@@ -118,7 +119,19 @@ export default function DashboardNavBar() {
           </SheetContent>
         </Sheet>
         <div className="w-full flex-1">
-          <form>
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/"></BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+              </BreadcrumbItem>
+              <DynamicBreadCrumb pathname={pathname} />
+            </BreadcrumbList>
+          </Breadcrumb>
+          {/* <form>
             <div className="relative">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -127,7 +140,7 @@ export default function DashboardNavBar() {
                 className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
               />
             </div>
-          </form>
+          </form> */}
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
