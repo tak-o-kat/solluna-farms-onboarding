@@ -42,6 +42,7 @@ export const insertUrl = async (
       };
     } finally {
       revalidatePath("/dashboard");
+      prisma.$disconnect;
     }
   } else {
     return {
@@ -49,5 +50,68 @@ export const insertUrl = async (
       message: "Invalid data",
       issues: parsed.error.issues.map((issue) => issue.message),
     };
+  }
+};
+
+export const updateIsCopied = async (id: string, bool: boolean) => {
+  const prisma = new PrismaClient();
+
+  try {
+    const resp = await prisma.url.update({
+      where: {
+        id: id,
+      },
+      data: {
+        isCopied: bool,
+      },
+    });
+    const msg = bool ? "Successfully copied" : "Removed copied from";
+    return {
+      status: 200,
+      message: msg,
+    };
+  } catch (err: any) {
+    console.log(err.message);
+    return {
+      status: 400,
+      name: err.name,
+      message: err?.message,
+    };
+  } finally {
+    revalidatePath("/dashboard");
+    prisma.$disconnect;
+  }
+};
+
+export const updateUrlStatus = async (
+  id: string,
+  status: "new" | "sent" | "completed"
+) => {
+  const prisma = new PrismaClient();
+
+  try {
+    const data = await prisma.url.update({
+      where: {
+        id: id,
+      },
+      data: {
+        status: status,
+      },
+    });
+
+    return {
+      status: 200,
+      message: `Successfully updated status on ${id}`,
+    };
+  } catch (err: any) {
+    console.log(err.message);
+    return {
+      status: 400,
+      name: err.name,
+      message: err?.message,
+    };
+  } finally {
+    revalidatePath("/dashboard");
+    prisma.$disconnect;
   }
 };

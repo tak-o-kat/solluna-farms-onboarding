@@ -5,7 +5,15 @@ const prisma = new PrismaClient();
 
 export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
-  const data = await prisma.url.findMany();
-
+  const data = await prisma.url.findMany({
+    orderBy: [
+      {
+        status: "asc",
+      },
+      {
+        isCopied: "desc",
+      },
+    ],
+  });
   return NextResponse.json(data);
 }

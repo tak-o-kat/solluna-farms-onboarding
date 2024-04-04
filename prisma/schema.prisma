@@ -13,6 +13,7 @@ model Url {
   url       String
   nanoId    String
   status    String
+  isCopied  Boolean
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   survey    Survey?
