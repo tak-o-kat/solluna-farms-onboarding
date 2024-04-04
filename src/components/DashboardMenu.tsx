@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import Logo from "./icons/Logo";
 
 export default function DashboardMenu() {
   const pathname = usePathname();
@@ -20,8 +20,10 @@ export default function DashboardMenu() {
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <Package2 className="h-6 w-6" />
-            <span className="">Solluna Farms</span>
+            <div className="h-6 w-6">
+              <Logo />
+            </div>
+            <span className="ml-2">Solluna Farms</span>
           </Link>
         </div>
         <div className="flex-1">
