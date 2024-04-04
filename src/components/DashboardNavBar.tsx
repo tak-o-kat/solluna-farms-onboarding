@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 import {
@@ -8,14 +9,12 @@ import {
   Home,
   LineChart,
   Menu,
-  Package,
-  Package2,
   Search,
-  ShoppingCart,
-  Users,
   LogOut,
   ChevronLeft,
-  UserPlus,
+  FileCog,
+  Package2,
+  Wallet,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -46,6 +45,7 @@ import { DropdownMenuSubTrigger } from "@radix-ui/react-dropdown-menu";
 
 export default function DashboardNavBar() {
   const { setTheme } = useTheme();
+  const pathname = usePathname();
 
   return (
     <div className="flex flex-col">
@@ -64,48 +64,43 @@ export default function DashboardNavBar() {
           <SheetContent side="left" className="flex flex-col">
             <nav className="grid gap-2 text-lg font-medium">
               <Link
-                href="#"
-                className="flex items-center gap-2 text-lg font-semibold"
+                href="/dashboard"
+                className={`${
+                  pathname === "/dashboard" && "bg-muted text-primary"
+                } flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
               >
-                <Package2 className="h-6 w-6" />
-                <span className="sr-only">Solluna Farms</span>
-              </Link>
-              <Link
-                href="#"
-                className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-              >
-                <Home className="h-5 w-5" />
+                <Home className="h-4 w-4" />
                 Dashboard
               </Link>
               <Link
-                href="/dashboard"
-                className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
+                href="/dashboard/accounts"
+                className={`${
+                  pathname === "/dashboard/accounts" && "bg-muted text-primary"
+                } flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
               >
-                <ShoppingCart className="h-5 w-5" />
-                Orders
-                <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                  6
-                </Badge>
+                <Wallet className="h-4 w-4" />
+                Accounts
               </Link>
               <Link
-                href="#"
-                className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                href="/dashboard/surveys"
+                className={`${
+                  pathname === "/dashboard/surveys" &&
+                  "bg-muted text-primary hover:text-primary"
+                } flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
               >
-                <Package className="h-5 w-5" />
-                Products
+                <FileCog className="h-4 w-4" />
+                Surveys{" "}
+                {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                4
+              </Badge> */}
               </Link>
               <Link
-                href="#"
-                className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                href="/dashboard/analytics"
+                className={`${
+                  pathname === "/dashboard/analytics" && "bg-muted text-primary"
+                } flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
               >
-                <Users className="h-5 w-5" />
-                Customers
-              </Link>
-              <Link
-                href="#"
-                className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-              >
-                <LineChart className="h-5 w-5" />
+                <LineChart className="h-4 w-4" />
                 Analytics
               </Link>
             </nav>

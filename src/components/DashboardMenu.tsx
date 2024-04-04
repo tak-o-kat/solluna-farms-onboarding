@@ -1,12 +1,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Bell,
   Home,
   LineChart,
   FileCog,
   Package2,
-  ShoppingCart,
   Wallet,
   LogOut,
 } from "lucide-react";
@@ -49,14 +47,15 @@ export default function DashboardMenu() {
             <Link
               href="/dashboard/surveys"
               className={`${
-                pathname === "/dashboard/surveys" && "bg-muted text-primary"
-              } flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:text-primary`}
+                pathname === "/dashboard/surveys" &&
+                "bg-muted text-primary hover:text-primary"
+              } flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
             >
               <FileCog className="h-4 w-4" />
               Surveys{" "}
-              <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+              {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                 4
-              </Badge>
+              </Badge> */}
             </Link>
             <Link
               href="/dashboard/analytics"
