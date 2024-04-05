@@ -39,10 +39,11 @@ import {
   DropdownMenuSubContent,
   DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenuSubTrigger } from "@radix-ui/react-dropdown-menu";
+
 import DynamicBreadCrumb from "./DynamicBreadCrumb";
+import Logo from "./icons/Logo";
 
 export default function DashboardNavBar() {
   const { setTheme } = useTheme();
@@ -63,6 +64,14 @@ export default function DashboardNavBar() {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="flex flex-col">
+            <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+              <Link href="/" className="flex items-center gap-2 font-semibold">
+                <div className="h-6 w-6">
+                  <Logo />
+                </div>
+                <span className="ml-2">Solluna Farms</span>
+              </Link>
+            </div>
             <nav className="grid gap-2 text-lg font-medium">
               <Link
                 href="/dashboard"
@@ -107,13 +116,10 @@ export default function DashboardNavBar() {
             </nav>
             <div className="mt-auto">
               <nav className="grid gap-2 text-lg font-medium">
-                <Link
-                  href="#"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                >
+                <div className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground">
                   <LogOut className="h-4 w-4" />
-                  Logout
-                </Link>
+                  <LogoutLink>Logout</LogoutLink>
+                </div>
               </nav>
             </div>
           </SheetContent>

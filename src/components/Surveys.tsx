@@ -3,20 +3,21 @@ import { SurveyLinkGenerator } from "./surveysPage/SurveyLinkGenerator";
 import { getUrlListApi } from "@/utils/urlBuilder";
 import { insertUrl } from "@/app/actions/url-table";
 
+import { cookies } from "next/headers";
+
 export interface TableData {
   id: string;
   url: string;
   nanoId: string;
-  status: string | "new" | "sent" | "completed";
+  status: "new" | "sent" | "completed";
   createdAt: Date | string;
   updatedAt: Date | string;
   isCopied: boolean;
 }
 
-async function getUrlList() {
+async function getUrlList(cookie: string) {
   // TODO: Check for db health and handle appropriately
-  const url = getUrlListApi();
-  console.log("Getting Table data from DB");
+  const url = getUrlListApi(cookie);
   const resp = await fetch(url, {
     method: "GET",
   });
@@ -25,17 +26,18 @@ async function getUrlList() {
 }
 
 export default async function Surveys() {
-  const data: Array<TableData> = await getUrlList();
-
+  // Grab the statusColumn cookie to determine the filter on the table query
+  const rawCookie = cookies().get("statusColumn")?.value;
+  const cookie = (rawCookie === "undefined" ? "new-sent" : rawCookie) as string;
+  const data: Array<TableData> = await getUrlList(cookie);
   return (
     <div className="flex flex-col flex-1">
       <div className="flex flex-col flex-1 items-start rounded-lg border shadow-sm p-4">
         <div className="flex flex-col">
           <SurveyLinkGenerator onFormAction={insertUrl} />
         </div>
-        <SurveyLinkTable data={data} />
+        <SurveyLinkTable data={data} statusCookie={cookie} />
       </div>
-      {/* <h1 className="text-lg font-semibold md:text-2xl">Survey Generator</h1> */}
     </div>
   );
 }

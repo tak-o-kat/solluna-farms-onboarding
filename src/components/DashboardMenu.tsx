@@ -1,13 +1,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Home,
-  LineChart,
-  FileCog,
-  Package2,
-  Wallet,
-  LogOut,
-} from "lucide-react";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+
+import { Home, LineChart, FileCog, Wallet, LogOut } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import Logo from "./icons/Logo";
@@ -72,13 +67,10 @@ export default function DashboardMenu() {
         </div>
         <div className="mt-auto mb-5">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
+            <div className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
               <LogOut className="h-4 w-4" />
-              Logout
-            </Link>
+              <LogoutLink>Logout</LogoutLink>
+            </div>
           </nav>
         </div>
       </div>

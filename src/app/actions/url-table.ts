@@ -1,6 +1,7 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
@@ -115,4 +116,9 @@ export const updateUrlStatus = async (
     revalidatePath("/dashboard");
     prisma.$disconnect;
   }
+};
+
+export const updateCookieForStatusColumn = (status: string, tag: string) => {
+  cookies().set("status", "testing");
+  revalidatePath(tag);
 };

@@ -13,7 +13,12 @@ export const makeSurveyUrl = (id: string) => {
   return `${baseUrl}/survey/${id}`;
 };
 
-export const getUrlListApi = () => {
+export const getUrlListApi = (status: string) => {
   const baseUrl = getBaseUrl();
-  return `${baseUrl}/api/url/list`;
+  return `${baseUrl}/api/url/list/${status}`;
+};
+
+export const getUrlStatusApi = (status: string) => {
+  const baseUrl = getBaseUrl();
+  return `${baseUrl}/api/url/${status}`;
 };

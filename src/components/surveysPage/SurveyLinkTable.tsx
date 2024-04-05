@@ -36,6 +36,7 @@ import {
 import { type TableData } from "../Surveys";
 import RowActions from "./RowActions";
 import CopiedColumn from "./CopiedColumn";
+import TableStatusDropDown from "./TableStatusDropDown";
 
 export const columns: ColumnDef<TableData>[] = [
   {
@@ -120,7 +121,13 @@ export const columns: ColumnDef<TableData>[] = [
   },
 ];
 
-export function SurveyLinkTable({ data }: { data: TableData[] }) {
+export function SurveyLinkTable({
+  data,
+  statusCookie,
+}: {
+  data: TableData[];
+  statusCookie: string;
+}) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -151,42 +158,49 @@ export function SurveyLinkTable({ data }: { data: TableData[] }) {
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col w-full">
-        <div className="flex items-center py-4">
+        {/* Start of filter and dropdowns */}
+        <div className="flex flex-col w-full sm:flex-row items-center py-4 space-y-2 sm:space-y-0">
           <Input
             placeholder="Filter survey link..."
             value={(table.getColumn("url")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("url")?.setFilterValue(event.target.value)
             }
-            className="max-w-sm"
+            className="max-w-xl w-full"
           />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="mt-0 flex w-full gap-2 items-end justify-end">
+            <TableStatusDropDown cookieStatus={statusCookie} />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-full sm:w-32">
+                  <div className="flex flex-row w-full items-center justify-between">
+                    Columns <ChevronDown className="sm:ml-2 h-4 w-4" />
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
+        {/* End of filter and dropdowns */}
         <div className="rounded-md border">
           <Table>
             <TableHeader>
