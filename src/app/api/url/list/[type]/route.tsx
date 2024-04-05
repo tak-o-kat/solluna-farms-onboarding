@@ -6,14 +6,11 @@ type statusDropDown = "new-sent" | "new" | "sent" | "completed";
 export const dynamic = "force-dynamic";
 export async function GET(
   request: NextRequest,
-  { params }: { params: { type: string } }
+  { params }: { params: { type: statusDropDown } }
 ) {
   // Get the value of the cookie
   const cookieValue = params.type;
-  const filteredValue =
-    cookieValue === undefined || cookieValue === "undefined"
-      ? "new-sent"
-      : cookieValue;
+  const filteredValue = cookieValue === undefined ? "new-sent" : cookieValue;
 
   // Convert the cookie value to a boolean
   const statusFilter = (
