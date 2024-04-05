@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { updateCookieForStatusColumn } from "@/app/actions/url-table";
+import { customRevalidate } from "@/app/actions/url-table";
 
 import {
   DropdownMenu,
@@ -10,31 +10,32 @@ import {
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { getUrlStatusApi } from "@/utils/urlBuilder";
-import { stat } from "fs";
+
+type statusDropDown = "new-sent" | "new" | "sent" | "completed";
 
 export default function TableStatusDropDown({
-  cookieStatus,
+  statusType,
 }: {
-  cookieStatus: string;
+  statusType: statusDropDown;
 }) {
-  const [status, setStatus] = useState(cookieStatus);
+  const [status, setStatus] = useState<string>(statusType);
 
   useEffect(() => {
     async function fetchData() {
+      // get proto and url
       const siteUrl = window.location.href.replace(
         window.location.pathname,
         ""
       );
-      await fetch(`${siteUrl}/api/url/status/${status}`, {
+      await fetch(`${siteUrl}/api/url/status/${status as statusDropDown}`, {
         method: "GET",
       });
-      updateCookieForStatusColumn(status, "/dashboard/surveys");
+      customRevalidate("/dashboard/surveys");
     }
-    if (cookieStatus !== status) {
+    if (statusType !== status) {
       fetchData();
     }
-  }, [status, cookieStatus]);
+  }, [status, statusType]);
 
   return (
     <DropdownMenu>

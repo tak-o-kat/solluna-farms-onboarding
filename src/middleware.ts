@@ -6,6 +6,6 @@ export default withAuth(async function middleware(req: NextRequest) {
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/api/url/:path*"],
+  matcher: ["/dashboard/:path*"], //"/api/url/:path*"
   // /((?!api|_next/static|_next/image|assets|favicon.ico).*)
 };

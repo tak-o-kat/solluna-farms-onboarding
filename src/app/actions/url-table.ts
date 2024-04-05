@@ -42,7 +42,7 @@ export const insertUrl = async (
         message: err?.message,
       };
     } finally {
-      revalidatePath("/dashboard");
+      revalidatePath("/dashboard/surveys");
       prisma.$disconnect;
     }
   } else {
@@ -80,7 +80,7 @@ export const updateIsCopied = async (id: string, bool: boolean) => {
       message: err?.message,
     };
   } finally {
-    revalidatePath("/dashboard");
+    revalidatePath("/dashboard/surveys");
     prisma.$disconnect;
   }
 };
@@ -113,12 +113,11 @@ export const updateUrlStatus = async (
       message: err?.message,
     };
   } finally {
-    revalidatePath("/dashboard");
+    revalidatePath("/dashboard/surveys");
     prisma.$disconnect;
   }
 };
 
-export const updateCookieForStatusColumn = (status: string, tag: string) => {
-  cookies().set("status", "testing");
+export const customRevalidate = (tag: string) => {
   revalidatePath(tag);
 };

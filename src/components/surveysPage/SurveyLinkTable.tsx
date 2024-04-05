@@ -38,6 +38,8 @@ import RowActions from "./RowActions";
 import CopiedColumn from "./CopiedColumn";
 import TableStatusDropDown from "./TableStatusDropDown";
 
+type statusDropDown = "new-sent" | "new" | "sent" | "completed";
+
 export const columns: ColumnDef<TableData>[] = [
   {
     id: "select",
@@ -123,10 +125,10 @@ export const columns: ColumnDef<TableData>[] = [
 
 export function SurveyLinkTable({
   data,
-  statusCookie,
+  statusType,
 }: {
   data: TableData[];
-  statusCookie: string;
+  statusType: statusDropDown;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -169,7 +171,7 @@ export function SurveyLinkTable({
             className="max-w-xl w-full"
           />
           <div className="mt-0 flex w-full gap-2 items-end justify-end">
-            <TableStatusDropDown cookieStatus={statusCookie} />
+            <TableStatusDropDown statusType={statusType} />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="w-full sm:w-32">
