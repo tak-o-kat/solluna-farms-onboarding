@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { updateUrlStatus } from "@/app/actions/url-table";
 import { Loader2Icon } from "lucide-react";
@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { type TableData } from "../Surveys";
+import { type TableData } from "@/components/Surveys";
 
 export default function RowActions({ data }: { data: TableData }) {
   const [isUpdating, setIsUpdating] = useState(false);

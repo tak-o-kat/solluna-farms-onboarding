@@ -1,16 +1,16 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
-import { schema } from "./registrationSchema";
-import { SurveyForm } from "./SurveyForm";
-
-import { makeSurveyUrl } from "@/utils/urlBuilder";
+import { onFormSurveyAction } from "@/app/actions/submit-survey";
+import { schema } from "@/utils/zod/surveyFormSchema";
+import { SurveyForm } from "@/components/forms/survey/SurveyForm";
 
 export default async function SurveyPage({
   params,
 }: {
   params: { id: string[] };
 }) {
+  // first thing we need to check if the id is valid
   if (params.id.length !== 1) {
     redirect("/not-found");
   }
@@ -45,7 +45,7 @@ export default async function SurveyPage({
         <div className="flex justify-center p-4 text-lg font-semibold">
           Onboarding Survey
         </div>
-        <SurveyForm onFormAction={onFormAction} />
+        <SurveyForm onFormAction={onFormSurveyAction} />
       </div>
     </>
   );

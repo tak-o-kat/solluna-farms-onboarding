@@ -33,7 +33,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { type TableData } from "../Surveys";
+import { type TableData } from "@/components/Surveys";
 import RowActions from "./RowActions";
 import CopiedColumn from "./CopiedColumn";
 import TableStatusDropDown from "./TableStatusDropDown";

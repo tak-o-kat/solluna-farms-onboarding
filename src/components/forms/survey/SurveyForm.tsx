@@ -14,23 +14,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { schema } from "./registrationSchema";
+import { schema } from "../../../utils/zod/surveyFormSchema";
 
 type FormSchema = z.infer<typeof schema>;
 
 export const SurveyForm = ({
-  // onDataAction,
   onFormAction,
 }: {
-  // onDataAction: (data: z.infer<typeof schema>) => Promise<{
-  //   message: string;
-  //   data?: z.infer<typeof schema>;
-  //   issues?: string[];
-  // }>;
   onFormAction: (
     prevState: {
       message: string;
@@ -50,13 +52,14 @@ export const SurveyForm = ({
   const form = useForm<FormSchema>({
     resolver: zodResolver(schema),
     defaultValues: {
+      gender: undefined,
       address: "",
     },
   });
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  return (
+  https: return (
     <Form {...form}>
       <div>{state?.message}</div>
       <form

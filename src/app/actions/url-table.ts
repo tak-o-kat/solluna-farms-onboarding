@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
-import { schema } from "@/components/surveysPage/urlSchema";
+import { schema } from "@/utils/zod/urlGeneratorSchema";
 import { generateInsertUrlQuery } from "@/utils/queryBuilder";
 
 // Form Actions

@@ -5,7 +5,7 @@ import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { Home, LineChart, FileCog, Wallet, LogOut } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import Logo from "./icons/Logo";
+import Logo from "@/components/icons/Logo";
 
 export default function DashboardMenu() {
   const pathname = usePathname();

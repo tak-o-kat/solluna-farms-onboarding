@@ -1,7 +1,7 @@
 "use client";
 
-import DashboardMenu from "@/components/DashboardMenu";
-import DashboardNavBar from "@/components/DashboardNavBar";
+import DashboardMenu from "@/components/dashboard/DashboardMenu";
+import DashboardNavBar from "@/components/dashboard/DashboardNavBar";
 import { Toaster } from "sonner";
 import { useTheme } from "next-themes";
 

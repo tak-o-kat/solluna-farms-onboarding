@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { schema } from "./urlSchema";
+import { schema } from "../../../utils/zod/urlGeneratorSchema";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 

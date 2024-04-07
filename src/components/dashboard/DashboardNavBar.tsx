@@ -9,11 +9,9 @@ import {
   Home,
   LineChart,
   Menu,
-  Search,
   LogOut,
   ChevronLeft,
   FileCog,
-  Package2,
   Wallet,
 } from "lucide-react";
 
@@ -24,7 +22,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import {
@@ -43,7 +40,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenuSubTrigger } from "@radix-ui/react-dropdown-menu";
 
 import DynamicBreadCrumb from "./DynamicBreadCrumb";
-import Logo from "./icons/Logo";
+import Logo from "@/components/icons/Logo";
 
 export default function DashboardNavBar() {
   const { setTheme } = useTheme();
