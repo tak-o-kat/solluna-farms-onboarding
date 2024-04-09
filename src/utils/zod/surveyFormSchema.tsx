@@ -27,7 +27,7 @@ export const schema = z.object({
   fungi_exp: z.enum(["beginner", "intermediate", "advanced"], {
     required_error: "You need to select an experience.",
   }),
-  blockchain_course: z.boolean().default(true),
+  blockchain_course: z.boolean().default(false),
   address: z
     .string()
     .max(58, {
