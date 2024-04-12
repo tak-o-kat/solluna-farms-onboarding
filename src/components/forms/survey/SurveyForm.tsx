@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -54,7 +54,7 @@ export const SurveyForm = ({
       gender: "male",
       fungi_exp: "none",
       location: "oregon",
-      blockchain_course: "false",
+      blockchain_course: undefined,
       address: "",
       comp_exp: "none",
       blockchain_exp: "none",
@@ -63,7 +63,13 @@ export const SurveyForm = ({
     },
   });
 
+  // Ref used to submit to server action
   const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    // needed in order to bypass the course conditional in defaultValutes
+    form.setValue("blockchain_course", "false");
+  }, [form]);
 
   return (
     <Form {...form}>
@@ -72,7 +78,9 @@ export const SurveyForm = ({
       <form
         ref={formRef}
         action={formAction}
-        onSubmit={form.handleSubmit(() => formRef?.current?.submit())}
+        onSubmit={form.handleSubmit(() => {
+          formRef?.current?.submit();
+        })}
         className="space-y-8"
       >
         <div className="flex flex-row w-full gap-2 z-20">
@@ -228,7 +236,7 @@ export const SurveyForm = ({
                 <FormItem>
                   <FormLabel>Algorand Address</FormLabel>
                   <FormControl>
-                    <Input placeholder="" {...field} />
+                    <Input placeholder="Address..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
