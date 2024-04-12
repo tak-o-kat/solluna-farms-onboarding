@@ -1,14 +1,23 @@
+import Image from "next/image";
+
 import { ThemeToggle } from "./ThemeToggle";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 export default function NavBar() {
-  const { user, isAuthenticated, isLoading } = useKindeBrowserClient();
-
   return (
-    <div className="flex flex-row justify-start ps-6 items-center h-[4rem] w-full z-0 border-b">
-      Solluna Farms
-      <nav className="absolute right-0 p-4">
-        <div className="flex flex-row justify-end items-center w-full gap-2">
+    <div className="flex flex-row justify-center h-[4rem] sm:h-[5rem] w-full z-0 border-b">
+      <nav className="flex flex-row items-center max-w-5xl w-full px-3">
+        <div className="flex flex-row gap-2 justify-start items-center w-full">
+          <Image
+            src={"/favicon.svg"}
+            alt={"Solluna Farms Logo"}
+            width="10"
+            height="10"
+            className="h-10 w-10"
+          />
+          <span className="text-lg">Solluna Farms</span>
+        </div>
+
+        <div className="flex justify-end w-full">
           <ThemeToggle />
         </div>
       </nav>

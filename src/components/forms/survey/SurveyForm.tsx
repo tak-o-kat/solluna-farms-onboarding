@@ -73,8 +73,6 @@ export const SurveyForm = ({
 
   return (
     <Form {...form}>
-      <div>{state?.message}</div>
-      <div>{state?.issues}</div>
       <form
         ref={formRef}
         action={formAction}
@@ -83,7 +81,7 @@ export const SurveyForm = ({
         })}
         className="space-y-8"
       >
-        <div className="flex flex-row w-full gap-2 z-20">
+        <div className="flex flex-row w-full gap-2">
           <div className="w-full">
             <FormField
               control={form.control}

@@ -16,15 +16,15 @@ export default async function SurveyPage({
   return (
     <>
       <div className="flex flex-col w-full max-w-3xl overflow-hidden">
-        <div className="h-[6rem] flex flex-col items-center justify-center mt-4 text-lg font-semibold">
+        <div className="flex flex-col items-center justify-center text-lg font-semibold py-4 mt-4">
           <span className="px-4 sm:text-2xl text-lg">
-            Please fill out the following survey.
+            Please fill out the following survey...
           </span>
-          <span className="px-4 sm:text-md text-sm">
-            if you have any questions please ask your instructor.
+          <span className="px-4 sm:text-md text-xs">
+            If you have any questions please ask your instructor.
           </span>
         </div>
-        <div className="flex flex-col flex-1 mx-auto w-full max-w-3xl p-4">
+        <div className="flex flex-col w-full max-w-3xl px-4">
           <SurveyForm onFormAction={onFormSurveyAction} />
         </div>
       </div>
