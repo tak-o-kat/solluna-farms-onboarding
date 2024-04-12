@@ -17,33 +17,28 @@ model Url {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   survey    Survey?
-  total     Totals   @relation(fields: [totalId], references: [id])
-  totalId   String
+
+  @@index([nanoId], type: Hash)
 }
 
 model Survey {
-  id           String   @id @default(cuid())
-  address      String   @unique
-  gender       String
-  age          String
-  race         String
-  job          String
-  location     String
-  mushroom_exp String
-  computer_exp String
-  crypto_exp   String
-  nft_exp      String
-  createdAt    DateTime @default(now()) @map("created_at")
-  url          Url      @relation(fields: [urlId], references: [id])
-  urlId        String   @unique
-  total        Totals   @relation(fields: [totalId], references: [id])
-  totalId      String
+  id            String   @id @default(cuid())
+  gender        String
+  age           String
+  location      String
+  mushroom_exp  String
+  is_blockchain Boolean
+  account       String   @unique
+  computer_exp  String
+  crypto_exp    String
+  nft_exp       String
+  createdAt     DateTime @default(now()) @map("created_at")
+  url           Url      @relation(fields: [urlId], references: [id])
+  urlId         String   @unique
 }
 
 model Totals {
-  id         String   @id @default(cuid())
-  table_name String
-  total      Int
-  urlIds     Url[]
-  surveyIds  Survey[]
+  id    String @id @default(cuid())
+  type  String @unique
+  total Int
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -30,7 +30,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { schema } from "../../../utils/zod/surveyFormSchema";
+import { schema } from "@/utils/zod/surveyFormSchema";
+import type { SurveyFormState } from "@/app/actions/submit-survey";
 
 type FormSchema = z.infer<typeof schema>;
 
@@ -38,30 +39,27 @@ export const SurveyForm = ({
   onFormAction,
 }: {
   onFormAction: (
-    prevState: {
-      message: string;
-      data?: z.infer<typeof schema>;
-      issues?: string[];
-    },
+    prevState: SurveyFormState,
     data: FormData
-  ) => Promise<{
-    message: string;
-    data?: z.infer<typeof schema>;
-    issues?: string[];
-  }>;
+  ) => Promise<SurveyFormState>;
 }) => {
+  const [isCollapsed, setIsCollaped] = useState(true);
   const [state, formAction] = useFormState(onFormAction, {
     message: "",
   });
   const form = useForm<FormSchema>({
     resolver: zodResolver(schema),
     defaultValues: {
-      age: undefined,
-      gender: undefined,
-      race_ethnicity: undefined,
-      fungi_exp: undefined,
-      blockchain_course: false,
+      age: 18,
+      gender: "male",
+      fungi_exp: "none",
+      location: "oregon",
+      blockchain_course: "false",
       address: "",
+      comp_exp: "none",
+      blockchain_exp: "none",
+      nft_exp: "none",
+      //...(state?.data ?? {}),
     },
   });
 
@@ -70,196 +68,118 @@ export const SurveyForm = ({
   return (
     <Form {...form}>
       <div>{state?.message}</div>
+      <div>{state?.issues}</div>
       <form
         ref={formRef}
         action={formAction}
         onSubmit={form.handleSubmit(() => formRef?.current?.submit())}
         className="space-y-8"
       >
-        <FormField
-          control={form.control}
-          name="age"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Age</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-36"
-                  type="number"
-                  placeholder="Enter age..."
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="gender"
-          render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>Select your gender...</FormLabel>
-              <RadioGroup
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                className="flex flex-col space-y-1"
-              >
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="male" />
-                  </FormControl>
-                  <FormLabel className="font-normal">Male</FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="female" />
-                  </FormControl>
-                  <FormLabel className="font-normal">Female</FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="other" />
-                  </FormControl>
-                  <FormLabel className="font-normal">Other</FormLabel>
-                </FormItem>
-              </RadioGroup>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="race_ethnicity"
-          render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>Select your race/ethnicity...</FormLabel>
-              <RadioGroup
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                className="flex flex-col space-y-1"
-              >
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="native" />
-                  </FormControl>
-                  <FormLabel className="font-normal">
-                    American Indian or Alaska Native
-                  </FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="asian" />
-                  </FormControl>
-                  <FormLabel className="font-normal">Asian</FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="black" />
-                  </FormControl>
-                  <FormLabel className="font-normal">
-                    Black or African American
-                  </FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="pacific" />
-                  </FormControl>
-                  <FormLabel className="font-normal">
-                    Native Hawaiian or Other Pacific Islander
-                  </FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="latino" />
-                  </FormControl>
-                  <FormLabel className="font-normal">
-                    Hispanic or Latino
-                  </FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="white" />
-                  </FormControl>
-                  <FormLabel className="font-normal">White</FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="mixed" />
-                  </FormControl>
-                  <FormLabel className="font-normal">Mixed</FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="no" />
-                  </FormControl>
-                  <FormLabel className="font-normal">No Response</FormLabel>
-                </FormItem>
-              </RadioGroup>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="space-y-10">
-          <FormField
-            control={form.control}
-            name="fungi_exp"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel>Let us know your experience with fungi...</FormLabel>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-col space-y-1"
-                >
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="beginner" />
-                    </FormControl>
-                    <FormLabel className="font-normal">Beginner</FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="intermediate" />
-                    </FormControl>
-                    <FormLabel className="font-normal">Intermediate</FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="advanced" />
-                    </FormControl>
-                    <FormLabel className="font-normal">Advanced</FormLabel>
-                  </FormItem>
-                </RadioGroup>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="">
+        <div className="flex flex-row w-full gap-2 z-20">
+          <div className="w-full">
             <FormField
               control={form.control}
-              name="blockchain_course"
+              name="age"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">
-                      Blockchain course
-                    </FormLabel>
-                    <FormDescription>
-                      Will you be taking our Algorand course?
-                    </FormDescription>
-                  </div>
+                <FormItem>
+                  <FormLabel>Your age</FormLabel>
                   <FormControl>
-                    <div className="flex flex-col space-y-2">
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                      <span className="flex justify-center items-center text-sm">
-                        {field.value ? "Yes" : "No"}
-                      </span>
-                    </div>
+                    <Input
+                      className=""
+                      type="number"
+                      placeholder="Enter age..."
+                      {...field}
+                    />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="w-full">
+            <FormField
+              control={form.control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gender</FormLabel>
+                  <input type="hidden" {...field} />
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your gender..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+        <div className="flex sm:flex-row flex-col w-full gap-2 sm:space-y-0 space-y-5">
+          <div className="sm:w-full">
+            <FormField
+              control={form.control}
+              name="fungi_exp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Your experience with fungi</FormLabel>
+                  <input type="hidden" {...field} />
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your level..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="none">None</SelectItem>
+                      <SelectItem value="beginner">Beginner</SelectItem>
+                      <SelectItem value="intermediate">Intermediate</SelectItem>
+                      <SelectItem value="advanced">Advanced</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="sm:w-full">
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Course location</FormLabel>
+                  <input type="hidden" {...field} />
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your course location..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="oregon">Oregon</SelectItem>
+                      <SelectItem value="florida">Florida</SelectItem>
+                      <SelectItem value="california">California</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -267,18 +187,153 @@ export const SurveyForm = ({
         </div>
         <FormField
           control={form.control}
-          name="address"
+          name="blockchain_course"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Algorand Address</FormLabel>
+            <FormItem className="space-y-3">
+              <FormLabel>Will you be taking our Algorand course?</FormLabel>
               <FormControl>
-                <Input placeholder="" {...field} />
+                <RadioGroup
+                  {...field}
+                  onValueChange={() => {
+                    setIsCollaped(!isCollapsed);
+                    field.onChange(isCollapsed ? "true" : "false");
+                  }}
+                  className="flex flex-col space-y-1"
+                >
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="false" />
+                    </FormControl>
+                    <FormLabel className="font-normal">No</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="true" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Yes</FormLabel>
+                  </FormItem>
+                </RadioGroup>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+
+        {!isCollapsed && (
+          <div className="space-y-8">
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Algorand Address</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex sm:flex-row flex-col w-full gap-2 sm:space-y-0 space-y-5">
+              <div className="w-full">
+                <FormField
+                  control={form.control}
+                  name="comp_exp"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        What is your experience with computers?
+                      </FormLabel>
+                      <input type="hidden" {...field} />
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select your level..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          <SelectItem value="beginner">Beginner</SelectItem>
+                          <SelectItem value="intermediate">
+                            Intermediate
+                          </SelectItem>
+                          <SelectItem value="advanced">Advanced</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="w-full">
+                <FormField
+                  control={form.control}
+                  name="blockchain_exp"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        What is your experience with blockchains?
+                      </FormLabel>
+                      <input type="hidden" {...field} />
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select your level..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          <SelectItem value="beginner">Beginner</SelectItem>
+                          <SelectItem value="intermediate">
+                            Intermediate
+                          </SelectItem>
+                          <SelectItem value="advanced">Advanced</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+            <FormField
+              control={form.control}
+              name="nft_exp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>What is your experience with NFTs?</FormLabel>
+                  <input type="hidden" {...field} />
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your level..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="none">None</SelectItem>
+                      <SelectItem value="beginner">Beginner</SelectItem>
+                      <SelectItem value="intermediate">Intermediate</SelectItem>
+                      <SelectItem value="advanced">Advanced</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
+        <Button className="w-full sm:w-36" type="submit">
+          Submit
+        </Button>
       </form>
     </Form>
   );
