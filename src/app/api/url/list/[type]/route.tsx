@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 type statusDropDown = "new-sent" | "new" | "sent" | "completed";
 
@@ -17,7 +17,6 @@ export async function GET(
     filteredValue === "new-sent" ? ["new", "sent"] : [filteredValue]
   ) as string[];
 
-  const prisma = new PrismaClient();
   const data = await prisma.url.findMany({
     where: {
       status: {

@@ -1,13 +1,11 @@
 "use server";
 import { NextResponse, NextRequest } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const prisma = new PrismaClient();
-
   // Check and see if the nanoId exists and make sure the link hasn't been submitted and marked completed
   const exists = await prisma.url
     .findFirst({

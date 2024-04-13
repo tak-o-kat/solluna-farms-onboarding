@@ -1,8 +1,7 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
 import { schema } from "@/utils/zod/urlGeneratorSchema";
@@ -10,8 +9,10 @@ import { generateInsertUrlQuery } from "@/utils/queryBuilder";
 
 // Form Actions
 export const insertUrl = async (
-  prevState: {
-    message: string;
+  _prevState: {
+    status?: number;
+    numLinks?: number;
+    message?: string;
     data?: z.infer<typeof schema>;
     issues?: string[];
   },
@@ -19,7 +20,6 @@ export const insertUrl = async (
 ) => {
   const data = Object.fromEntries(formData);
   const parsed = schema.safeParse(data);
-  const prisma = new PrismaClient();
 
   if (parsed.success) {
     try {
@@ -56,8 +56,6 @@ export const insertUrl = async (
 };
 
 export const updateIsCopied = async (id: string, bool: boolean) => {
-  const prisma = new PrismaClient();
-
   try {
     const resp = await prisma.url.update({
       where: {
@@ -89,8 +87,6 @@ export const updateUrlStatus = async (
   id: string,
   status: "new" | "sent" | "completed"
 ) => {
-  const prisma = new PrismaClient();
-
   try {
     const data = await prisma.url.update({
       where: {
