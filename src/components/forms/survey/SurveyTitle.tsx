@@ -1,6 +1,6 @@
 export default function SurveyTitle() {
   return (
-    <div className="flex flex-col items-center justify-center text-lg font-semibold pt-4">
+    <div className="flex flex-col items-center justify-center text-lg font-semibold pt-6">
       <span className="px-4 sm:text-2xl text-lg">
         Please fill out the following survey...
       </span>

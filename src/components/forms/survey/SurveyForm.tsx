@@ -33,6 +33,7 @@ import { z } from "zod";
 import { schema } from "@/utils/zod/surveyFormSchema";
 import type { SurveyFormState } from "@/app/actions/submit-survey";
 import SurveyTitle from "./SurveyTitle";
+import SuccessfullySubmittedSurvey from "./SuccessfullySubmitted";
 
 type FormSchema = z.infer<typeof schema>;
 
@@ -48,7 +49,6 @@ export const SurveyForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [state, formAction] = useFormState(onFormAction, {
-    status: 403,
     message: "",
   });
   const form = useForm<FormSchema>({
@@ -89,24 +89,31 @@ export const SurveyForm = ({
   return (
     <>
       {state.status === 200 ? (
-        <div>{state?.message}</div>
+        <SuccessfullySubmittedSurvey />
       ) : (
         <>
           <SurveyTitle />
           <Form {...form}>
             {state.status === 403 && getServerErrors()}
             <form
+              id="submit-form"
               ref={formRef}
               action={formAction}
               onSubmit={form.handleSubmit(() => {
                 setIsSubmitting(true);
+                console.log(typeof form.getValues("blockchain_course"));
                 setTimeout(() => {
                   formRef?.current?.submit();
                   setIsSubmitting(false);
-                }, 200);
+                }, 2000);
               })}
               className="space-y-8"
             >
+              <div
+                className={`${!isSubmitting && "invisible"} ${
+                  isCollapsed ? "h-[26rem]" : "h-[52rem]"
+                } absolute inset-x-auto z-10 flex justify-center items-center  max-w-3xl w-full opacity-0 bg-black`}
+              ></div>
               <div className="flex flex-row w-full gap-2">
                 <div className="w-full">
                   <FormField
@@ -232,6 +239,7 @@ export const SurveyForm = ({
                     <FormControl>
                       <RadioGroup
                         {...field}
+                        disabled={false}
                         onValueChange={() => {
                           setIsCollaped(!isCollapsed);
                           field.onChange(isCollapsed ? "true" : "false");
@@ -381,6 +389,7 @@ export const SurveyForm = ({
                   />
                 </div>
               )}
+
               <Button
                 className="flex flex-row gap-2 w-full sm:w-36"
                 type="submit"
