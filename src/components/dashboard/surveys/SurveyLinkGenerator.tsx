@@ -28,7 +28,7 @@ export const SurveyLinkGenerator = ({
   onFormAction: (
     prevState: {
       status?: number;
-      message: string;
+      message?: string;
       numLinks?: number;
       data?: z.infer<typeof schema>;
       issues?: string[];
@@ -36,16 +36,14 @@ export const SurveyLinkGenerator = ({
     data: FormData
   ) => Promise<{
     status?: number;
-    message: string;
+    message?: string;
     numLinks?: number;
     data?: z.infer<typeof schema>;
     issues?: string[];
   }>;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [state, formAction] = useFormState(onFormAction, {
-    message: "",
-  });
+  const [state, formAction] = useFormState(onFormAction, {});
   const form = useForm<FormSchema>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -56,9 +54,9 @@ export const SurveyLinkGenerator = ({
   const formRef = useRef<HTMLFormElement>(null);
 
   const submitFormRef = () => {
-    setIsLoading(!isLoading);
+    setIsLoading(true);
     formRef?.current?.submit();
-    setIsLoading(!isLoading);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -76,7 +74,10 @@ export const SurveyLinkGenerator = ({
       <form
         ref={formRef}
         action={formAction}
-        onSubmit={form.handleSubmit(() => submitFormRef())}
+        onSubmit={(e) => {
+          e.stopPropagation();
+          form.handleSubmit(() => submitFormRef());
+        }}
         className="flex flex-row gap-2"
       >
         <FormField

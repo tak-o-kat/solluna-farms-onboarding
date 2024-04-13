@@ -9,8 +9,10 @@ import { generateInsertUrlQuery } from "@/utils/queryBuilder";
 
 // Form Actions
 export const insertUrl = async (
-  prevState: {
-    message: string;
+  _prevState: {
+    status?: number;
+    numLinks?: number;
+    message?: string;
     data?: z.infer<typeof schema>;
     issues?: string[];
   },
