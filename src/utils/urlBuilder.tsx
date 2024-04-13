@@ -18,7 +18,7 @@ export const getUrlListApi = (status: string) => {
   return `${baseUrl}/api/url/list/${status}`;
 };
 
-export const getUrlStatusApi = (status: string) => {
+export const getIsUrlValid = (id: string) => {
   const baseUrl = getBaseUrl();
-  return `${baseUrl}/api/url/${status}`;
+  return `${baseUrl}/api/valid/url/${id}`;
 };

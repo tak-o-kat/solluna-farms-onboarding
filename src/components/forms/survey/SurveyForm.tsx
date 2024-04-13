@@ -38,8 +38,10 @@ import SuccessfullySubmittedSurvey from "./SuccessfullySubmitted";
 type FormSchema = z.infer<typeof schema>;
 
 export const SurveyForm = ({
+  id,
   onFormAction,
 }: {
+  id: string;
   onFormAction: (
     prevState: SurveyFormState,
     data: FormData
@@ -54,6 +56,7 @@ export const SurveyForm = ({
   const form = useForm<FormSchema>({
     resolver: zodResolver(schema),
     defaultValues: {
+      id: id,
       age: 18,
       gender: "male",
       fungi_exp: "none",
@@ -94,7 +97,10 @@ export const SurveyForm = ({
         <>
           <SurveyTitle />
           <Form {...form}>
-            {state.status === 403 && getServerErrors()}
+            {state.status === 403 && (
+              <div className="text-red-500 mt-2">{state.message}</div>
+            )}
+            {state.status === 400 && getServerErrors()}
             <form
               id="submit-form"
               ref={formRef}
@@ -113,6 +119,7 @@ export const SurveyForm = ({
               ></div>
               <div className="flex flex-row w-full gap-2">
                 <div className="w-full">
+                  <input type="hidden" value={id} name="id" />
                   <FormField
                     control={form.control}
                     name="age"

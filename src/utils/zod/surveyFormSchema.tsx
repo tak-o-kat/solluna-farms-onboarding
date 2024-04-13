@@ -4,6 +4,7 @@ import { validateAlgorandAddress } from "@/utils/zod/validateAlgorandAddress";
 
 export const schema = z.discriminatedUnion("blockchain_course", [
   z.object({
+    id: z.string(),
     age: z.coerce
       .number({
         required_error: "Age is required",
@@ -26,6 +27,7 @@ export const schema = z.discriminatedUnion("blockchain_course", [
     blockchain_course: z.literal("false"),
   }),
   z.object({
+    id: z.string(),
     age: z.coerce
       .number({
         required_error: "Age is required",
