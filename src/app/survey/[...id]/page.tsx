@@ -15,15 +15,7 @@ export default async function SurveyPage({
 
   return (
     <div className="flex flex-col w-full max-w-3xl">
-      <div className="flex flex-col items-center justify-center text-lg font-semibold py-4 mt-4">
-        <span className="px-4 sm:text-2xl text-lg">
-          Please fill out the following survey...
-        </span>
-        <span className="px-4 sm:text-md text-xs">
-          If you have any questions please ask your instructor.
-        </span>
-      </div>
-      <div className="flex flex-col w-full max-w-3xl px-4">
+      <div className="flex flex-col w-full max-w-3xl px-4 pb-4">
         <SurveyForm onFormAction={onFormSurveyAction} />
       </div>
     </div>
