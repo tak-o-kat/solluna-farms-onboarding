@@ -402,7 +402,7 @@ export const SurveyForm = ({
                 {isSubmitting && (
                   <Loader2Icon className="h-5 w-5 animate-spin" />
                 )}
-                Submit
+                {isSubmitting ? "Submitting" : "Submit"}
               </Button>
             </form>
           </Form>
