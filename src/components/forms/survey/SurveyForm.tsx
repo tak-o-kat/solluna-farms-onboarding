@@ -101,11 +101,8 @@ export const SurveyForm = ({
               action={formAction}
               onSubmit={form.handleSubmit(() => {
                 setIsSubmitting(true);
-                console.log(typeof form.getValues("blockchain_course"));
-                setTimeout(() => {
-                  formRef?.current?.submit();
-                  setIsSubmitting(false);
-                }, 2000);
+                formRef?.current?.submit();
+                setIsSubmitting(false);
               })}
               className="space-y-8"
             >
