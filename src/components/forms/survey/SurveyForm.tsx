@@ -105,14 +105,11 @@ export const SurveyForm = ({
               id="submit-form"
               ref={formRef}
               action={formAction}
-              onSubmit={(e) => {
-                e.stopPropagation();
-                form.handleSubmit(() => {
-                  setIsSubmitting(true);
-                  formRef?.current?.submit();
-                  setIsSubmitting(false);
-                });
-              }}
+              onSubmit={form.handleSubmit(() => {
+                setIsSubmitting(true);
+                formRef?.current?.submit();
+                setIsSubmitting(false);
+              })}
               className="space-y-8"
             >
               <div
