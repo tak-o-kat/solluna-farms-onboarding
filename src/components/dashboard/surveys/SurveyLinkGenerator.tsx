@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useFormState, useFormStatus } from "react-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,7 @@ export const SurveyLinkGenerator = ({
   }>;
 }) => {
   const { pending } = useFormStatus();
+  const [isPending, startTransition] = useTransition();
   const [state, formAction] = useFormState(onFormAction, {});
   const form = useForm<FormSchema>({
     resolver: zodResolver(schema),
@@ -70,7 +71,11 @@ export const SurveyLinkGenerator = ({
         action={formAction}
         onSubmit={(e) => {
           e.stopPropagation();
-          form.handleSubmit(() => formRef?.current?.submit());
+          startTransition(async () => {
+            form.handleSubmit(() => {
+              formRef?.current?.submit();
+            });
+          });
         }}
         className="flex flex-row gap-2"
       >
@@ -98,8 +103,8 @@ export const SurveyLinkGenerator = ({
           type="submit"
           disabled={pending}
         >
-          {pending && <Loader2Icon className="h-4 w-4 animate-spin" />}
-          {pending ? "Generating" : "Generate"}
+          {isPending && <Loader2Icon className="h-4 w-4 animate-spin" />}
+          {isPending ? "Generating" : "Generate"}
         </Button>
       </form>
     </Form>

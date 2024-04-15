@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormState, useFormStatus } from "react-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2Icon } from "lucide-react";
@@ -39,6 +39,7 @@ type FormSchema = z.infer<typeof schema>;
 
 export const SurveyForm = ({ id }: { id: string }) => {
   const { pending } = useFormStatus();
+  const [isPending, startTransition] = useTransition();
   const [isCollapsed, setIsCollaped] = useState(true);
 
   const [state, formAction] = useFormState(onFormSurveyAction, {
@@ -96,13 +97,17 @@ export const SurveyForm = ({ id }: { id: string }) => {
               id="submit-form"
               ref={formRef}
               action={formAction}
-              onSubmit={form.handleSubmit(() => {
-                formRef?.current?.submit();
-              })}
+              onSubmit={() =>
+                startTransition(async () => {
+                  form.handleSubmit(() => {
+                    formRef?.current?.submit();
+                  });
+                })
+              }
               className="space-y-8"
             >
               <div
-                className={`${!pending && "invisible"} ${
+                className={`${!isPending && "invisible"} ${
                   isCollapsed ? "h-[26rem]" : "h-[52rem]"
                 } absolute inset-x-auto z-10 flex justify-center items-center  max-w-3xl w-full opacity-0 bg-black`}
               ></div>
@@ -386,10 +391,10 @@ export const SurveyForm = ({ id }: { id: string }) => {
               <Button
                 className="flex flex-row gap-2 w-full sm:w-36"
                 type="submit"
-                disabled={pending}
+                disabled={isPending}
               >
-                {pending && <Loader2Icon className="h-5 w-5 animate-spin" />}
-                {pending ? "Submitting" : "Submit"}
+                {isPending && <Loader2Icon className="h-5 w-5 animate-spin" />}
+                {isPending ? "Submitting" : "Submit"}
               </Button>
             </form>
           </Form>
