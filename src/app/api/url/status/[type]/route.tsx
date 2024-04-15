@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 type statusDropDown = "new-sent" | "new" | "sent" | "completed";
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { type: statusDropDown } }
 ) {
   cookies().set("statusColumn", params.type);

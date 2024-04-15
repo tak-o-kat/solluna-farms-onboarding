@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -9,32 +10,40 @@ datasource db {
 }
 
 model Url {
-  id        String   @id @default(cuid())
+  id        String     @id @unique
   url       String
-  nanoId    String
-  status    String
   isCopied  Boolean
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
   survey    Survey?
+  urlStatus UrlStatus?
 
-  @@index([nanoId], type: Hash)
+  @@index([id], type: Hash)
+}
+
+model UrlStatus {
+  id     String @id @default(cuid())
+  status String
+  url    Url    @relation(fields: [urlId], references: [id])
+  urlId  String @unique
+
+  @@index([urlId], type: Hash)
 }
 
 model Survey {
-  id            String   @id @default(cuid())
-  gender        String
-  age           String
-  location      String
-  mushroom_exp  String
-  is_blockchain Boolean
-  account       String   @unique
-  computer_exp  String
-  crypto_exp    String
-  nft_exp       String
-  createdAt     DateTime @default(now()) @map("created_at")
-  url           Url      @relation(fields: [urlId], references: [id])
-  urlId         String   @unique
+  id                String   @id @default(cuid())
+  gender            String
+  age               Int
+  location          String
+  fungi_exp         String
+  blockchain_course Boolean
+  account           String?  @unique
+  comp_exp          String?
+  blockchain_exp    String?
+  nft_exp           String?
+  createdAt         DateTime @default(now()) @map("created_at")
+  url               Url      @relation(fields: [urlId], references: [id])
+  urlId             String   @unique
 }
 
 model Totals {

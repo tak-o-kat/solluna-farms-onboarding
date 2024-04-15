@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { getIsUrlValid } from "@/utils/urlBuilder";
-import { onFormSurveyAction } from "@/app/actions/submit-survey";
+import SurveyLoader from "@/components/forms/survey/SurveyLoader";
 import { SurveyForm } from "@/components/forms/survey/SurveyForm";
 
 type ErrorType = "invalid" | "error" | undefined;
@@ -42,7 +42,8 @@ export default async function SurveyPage({
   return (
     <div className="flex flex-col w-full max-w-3xl">
       <div className="flex flex-col w-full max-w-3xl px-4 pb-4">
-        <SurveyForm onFormAction={onFormSurveyAction} id={params.id[0]} />
+        {/* <SurveyLoader id={params.id[0]} /> */}
+        <SurveyForm id={params.id[0]} />
       </div>
     </div>
   );

@@ -4,6 +4,8 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
+import { nanoid } from "nanoid";
+import { makeSurveyUrl } from "@/utils/urlBuilder";
 import { schema } from "@/utils/zod/urlGeneratorSchema";
 import { generateInsertUrlQuery } from "@/utils/queryBuilder";
 
@@ -23,16 +25,34 @@ export const insertUrl = async (
 
   if (parsed.success) {
     try {
-      // generate link id and save it to db
-      const query = await generateInsertUrlQuery(parsed.data.numLinks);
-      const newUrls = await prisma.url.createMany({
-        data: query,
-      });
+      // generate url id and connect status to url
+      const numRecords = parsed.data.numLinks;
+      const ids = [];
+      for (let i = 0; i < numRecords; i++) {
+        const nanoId = nanoid();
+        ids.push(
+          await prisma.url.create({
+            data: {
+              id: nanoId,
+              url: makeSurveyUrl(nanoId),
+              isCopied: false,
+              urlStatus: {
+                create: {
+                  status: "new",
+                },
+              },
+            },
+            select: {
+              id: true,
+            },
+          })
+        );
+      }
 
       return {
         status: 200,
-        message: "successfully sent to server and db",
-        numLinks: newUrls.count,
+        message: "Successfully added records to database",
+        numLinks: ids.length,
       };
     } catch (err: any) {
       console.log(err.message);
@@ -42,8 +62,8 @@ export const insertUrl = async (
         message: err?.message,
       };
     } finally {
+      prisma.$disconnect();
       revalidatePath("/dashboard/surveys");
-      prisma.$disconnect;
     }
   } else {
     prisma.$disconnect;
@@ -78,8 +98,8 @@ export const updateIsCopied = async (id: string, bool: boolean) => {
       message: err?.message,
     };
   } finally {
+    prisma.$disconnect();
     revalidatePath("/dashboard/surveys");
-    prisma.$disconnect;
   }
 };
 
@@ -88,9 +108,9 @@ export const updateUrlStatus = async (
   status: "new" | "sent" | "completed"
 ) => {
   try {
-    const data = await prisma.url.update({
+    const data = await prisma.urlStatus.update({
       where: {
-        id: id,
+        urlId: id,
       },
       data: {
         status: status,
@@ -109,11 +129,11 @@ export const updateUrlStatus = async (
       message: err?.message,
     };
   } finally {
+    prisma.$disconnect();
     revalidatePath("/dashboard/surveys");
-    prisma.$disconnect;
   }
 };
 
 export const customRevalidate = (tag: string) => {
-  revalidatePath(tag);
+  revalidateTag(tag);
 };

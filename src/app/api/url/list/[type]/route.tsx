@@ -18,20 +18,46 @@ export async function GET(
   ) as string[];
 
   const data = await prisma.url.findMany({
+    relationLoadStrategy: "join",
+    include: {
+      urlStatus: {
+        select: {
+          status: true,
+        },
+      },
+    },
     where: {
-      status: {
-        in: statusFilter,
+      urlStatus: {
+        status: {
+          in: statusFilter,
+        },
       },
     },
     orderBy: [
       {
-        status: "asc",
+        urlStatus: {
+          status: "asc",
+        },
       },
       {
         isCopied: "desc",
       },
     ],
   });
-  prisma.$disconnect;
-  return NextResponse.json(data);
+
+  // Add the urlStatus to the root of the obj
+  const updatedData = data.map((record) => {
+    const mutatedRecord: any = {
+      id: record.id,
+      status: record.urlStatus?.status as string,
+      url: record.url,
+      isCopied: record.isCopied,
+      createdAt: record.createdAt,
+      updatedAt: record.updatedAt,
+    };
+    return mutatedRecord;
+  });
+
+  await prisma.$disconnect();
+  return NextResponse.json(updatedData);
 }

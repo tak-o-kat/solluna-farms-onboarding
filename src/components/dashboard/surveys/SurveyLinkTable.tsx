@@ -87,7 +87,7 @@ export const columns: ColumnDef<TableData>[] = [
   {
     accessorKey: "url",
     header: "Url",
-    cell: ({ row }) => <div className="lowercase">{row.getValue("url")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("url")}</div>,
   },
   {
     accessorKey: "createdAt",

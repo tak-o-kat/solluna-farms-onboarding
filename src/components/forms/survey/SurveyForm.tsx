@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2Icon } from "lucide-react";
+import { onFormSurveyAction } from "@/app/actions/submit-survey";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -34,23 +36,18 @@ import { schema } from "@/utils/zod/surveyFormSchema";
 import type { SurveyFormState } from "@/app/actions/submit-survey";
 import SurveyTitle from "./SurveyTitle";
 import SuccessfullySubmittedSurvey from "./SuccessfullySubmitted";
+import { isCompleted } from "@/app/actions/is-completed";
+import LoadingSpinner from "./LoadingSpinner";
 
 type FormSchema = z.infer<typeof schema>;
 
-export const SurveyForm = ({
-  id,
-  onFormAction,
-}: {
-  id: string;
-  onFormAction: (
-    prevState: SurveyFormState,
-    data: FormData
-  ) => Promise<SurveyFormState>;
-}) => {
+export const SurveyForm = ({ id }: { id: string }) => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
   const [isCollapsed, setIsCollaped] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [state, formAction] = useFormState(onFormAction, {
+  const [state, formAction] = useFormState(onFormSurveyAction, {
     message: "",
   });
   const form = useForm<FormSchema>({
@@ -84,17 +81,38 @@ export const SurveyForm = ({
     );
   };
 
+  // const resp = await apiResp.json();
+
+  // if (resp.isCompleted) {
+  //   router.push("/not-found/survey/invalid");
+  // }
+
   useEffect(() => {
     // needed in order to bypass the course conditional in defaultValutes
     form.setValue("blockchain_course", "false");
-  }, [form]);
+
+    // get the base url to make an api call
+    const siteUrl = window.location.href.replace(window.location.pathname, "");
+    console.log("Use effect");
+    if (state?.status === undefined) {
+      fetch(`${siteUrl}/api/url/completed/${id}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.isCompleted) {
+            router.push("/survey/errors/completed");
+          }
+        });
+    }
+  }, [form, id, router, state.status]);
 
   return (
     <>
       {state.status === 200 ? (
         <SuccessfullySubmittedSurvey />
       ) : (
-        <>
+        <div>
           <SurveyTitle />
           <Form {...form}>
             {state.status === 403 && (
@@ -406,7 +424,7 @@ export const SurveyForm = ({
               </Button>
             </form>
           </Form>
-        </>
+        </div>
       )}
     </>
   );

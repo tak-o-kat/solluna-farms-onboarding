@@ -23,8 +23,8 @@ async function getUrlList(cookie: string) {
   const resp = await fetch(url, {
     method: "GET",
   });
-
-  return resp.json();
+  const json = await resp.json();
+  return json;
 }
 
 export default async function Surveys() {
