@@ -13,7 +13,7 @@ export default function CopiedColumn({ data }: { data: TableData }) {
     if (resp.status === 200) {
       toast(`${resp.message} ${data.url}`);
       navigator.clipboard.writeText(data.url);
-      //setIsCopied(bool);
+      setIsCopied(bool);
     } else if (resp.status >= 400) {
       toast("Something went wrong updating status", {
         description: resp.message,

@@ -93,13 +93,13 @@ export const SurveyLinkGenerator = ({
           )}
         />
         <Button
-          className="flex flex-row gap-2"
+          className="flex flex-row gap-2 w-32"
           variant="outline"
           type="submit"
           disabled={pending}
         >
           {pending && <Loader2Icon className="h-4 w-4 animate-spin" />}
-          Generate
+          {pending ? "Generating" : "Generate"}
         </Button>
       </form>
     </Form>
