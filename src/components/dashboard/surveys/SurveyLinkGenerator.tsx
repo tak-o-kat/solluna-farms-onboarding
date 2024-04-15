@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 
@@ -42,7 +42,7 @@ export const SurveyLinkGenerator = ({
     issues?: string[];
   }>;
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const { pending } = useFormStatus();
   const [state, formAction] = useFormState(onFormAction, {});
   const form = useForm<FormSchema>({
     resolver: zodResolver(schema),
@@ -52,12 +52,6 @@ export const SurveyLinkGenerator = ({
   });
 
   const formRef = useRef<HTMLFormElement>(null);
-
-  const submitFormRef = () => {
-    setIsLoading(true);
-    formRef?.current?.submit();
-    setIsLoading(false);
-  };
 
   useEffect(() => {
     if (state.status === 200) {
@@ -76,7 +70,7 @@ export const SurveyLinkGenerator = ({
         action={formAction}
         onSubmit={(e) => {
           e.stopPropagation();
-          form.handleSubmit(() => submitFormRef());
+          form.handleSubmit(() => formRef?.current?.submit());
         }}
         className="flex flex-row gap-2"
       >
@@ -102,9 +96,9 @@ export const SurveyLinkGenerator = ({
           className="flex flex-row gap-2"
           variant="outline"
           type="submit"
-          disabled={isLoading}
+          disabled={pending}
         >
-          {isLoading && <Loader2Icon className="h-4 w-4 animate-spin" />}
+          {pending && <Loader2Icon className="h-4 w-4 animate-spin" />}
           Generate
         </Button>
       </form>

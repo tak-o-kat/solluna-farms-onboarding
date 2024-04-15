@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2Icon } from "lucide-react";
 import { onFormSurveyAction } from "@/app/actions/submit-survey";
-import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -33,14 +32,12 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { schema } from "@/utils/zod/surveyFormSchema";
-import type { SurveyFormState } from "@/app/actions/submit-survey";
 import SurveyTitle from "./SurveyTitle";
 import SuccessfullySubmittedSurvey from "./SuccessfullySubmitted";
 
 type FormSchema = z.infer<typeof schema>;
 
 export const SurveyForm = ({ id }: { id: string }) => {
-  const router = useRouter();
   const { pending } = useFormStatus();
   const [isCollapsed, setIsCollaped] = useState(true);
 
@@ -81,7 +78,7 @@ export const SurveyForm = ({ id }: { id: string }) => {
   useEffect(() => {
     // needed in order to bypass the course conditional in defaultValutes
     form.setValue("blockchain_course", "false");
-  }, [form, id, router, state.status]);
+  }, [form]);
 
   return (
     <>

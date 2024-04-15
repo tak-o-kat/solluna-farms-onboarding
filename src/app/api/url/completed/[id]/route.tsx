@@ -22,6 +22,9 @@ export async function GET(
     },
   });
 
+  // In order to display the Successfully submitted view I need to
+  // return false to completed on submittion, if the page reload happens
+  // within a certain time return false else just return as normal.
   const dbDateTime = test?.updatedAt.toISOString();
   const dbDate = dbDateTime?.slice(0, 17);
   const dbTime = dbDateTime?.slice(17, 23) as string;
