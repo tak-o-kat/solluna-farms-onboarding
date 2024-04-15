@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   // Make a query to urlStatus table to see if the id is already marked completed
-  const bool = await prisma.urlStatus
+  let bool = await prisma.urlStatus
     .findUnique({
       where: {
         urlId: params.id,
@@ -15,6 +15,29 @@ export async function GET(
       },
     })
     .then((r) => Boolean(r));
+
+  const test = await prisma.urlStatus.findFirst({
+    where: {
+      urlId: params.id,
+    },
+  });
+
+  const dbDateTime = test?.updatedAt.toISOString();
+  const dbDate = dbDateTime?.slice(0, 17);
+  const dbTime = dbDateTime?.slice(17, 23) as string;
+
+  const d = new Date().toISOString();
+  const serverDate = d.slice(0, 17);
+  const serverTime = d.slice(17, 23);
+
+  if (serverDate === dbDate) {
+    const diff = parseFloat(serverTime) - parseFloat(dbTime);
+    if (diff < 3) {
+      bool = false;
+    }
+  }
+
+  // console.log(`Is Date/Hour the same: ${serverDate === dbDate}`);
 
   await prisma.$disconnect();
 

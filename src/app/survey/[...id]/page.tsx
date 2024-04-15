@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 
-import { getIsUrlValid } from "@/utils/urlBuilder";
+import { getIsUrlValid, getStatusCheckUrl } from "@/utils/urlBuilder";
 import SurveyLoader from "@/components/forms/survey/SurveyLoader";
 import { SurveyForm } from "@/components/forms/survey/SurveyForm";
 
-type ErrorType = "invalid" | "error" | undefined;
+type ErrorType = "invalid" | "completed" | "error" | undefined;
 
 export default async function SurveyPage({
   params,
@@ -18,9 +18,9 @@ export default async function SurveyPage({
 
   // First thing to do is check to see if url is still active
   let errorType: ErrorType = undefined;
-
+  const id = params.id[0];
   try {
-    const endPoint = getIsUrlValid(params.id[0]);
+    const endPoint = getIsUrlValid(id);
     const response = await fetch(endPoint, {
       method: "GET",
     });
@@ -29,14 +29,25 @@ export default async function SurveyPage({
     if (resp.status === 200 && !resp?.isValid) {
       errorType = "invalid";
     }
+
+    const isStatusCompletedEndPoint = getStatusCheckUrl(id);
+    const check = await fetch(isStatusCompletedEndPoint);
+    const checkResp = await check.json();
+    if (checkResp.status === 200 && checkResp?.isCompleted) {
+      // ID is either incorrect or not longer active
+      errorType = "completed";
+    }
   } catch (err) {
     console.log(err);
-    redirect(`/not-found/survey/error`);
+    redirect(`/surver/errors/server-error`);
   }
 
   // Need to redirect outside try/catch or it will redirect to error instead
   if (errorType === "invalid") {
-    redirect(`/not-found/survey/invalid`);
+    redirect(`/survey/errors/invalid`);
+  }
+  if (errorType === "completed") {
+    redirect(`/survey/errors/completed`);
   }
 
   return (

@@ -92,19 +92,19 @@ export const SurveyForm = ({ id }: { id: string }) => {
     form.setValue("blockchain_course", "false");
 
     // get the base url to make an api call
-    const siteUrl = window.location.href.replace(window.location.pathname, "");
-    console.log("Use effect");
-    if (state?.status === undefined) {
-      fetch(`${siteUrl}/api/url/completed/${id}`, {
-        method: "GET",
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.isCompleted) {
-            router.push("/survey/errors/completed");
-          }
-        });
-    }
+    // const siteUrl = window.location.href.replace(window.location.pathname, "");
+    // console.log("Use effect");
+    // if (state?.status === undefined) {
+    //   fetch(`${siteUrl}/api/url/completed/${id}`, {
+    //     method: "GET",
+    //   })
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //       if (data.isCompleted) {
+    //         router.push("/survey/errors/completed");
+    //       }
+    //     });
+    // }
   }, [form, id, router, state.status]);
 
   return (
