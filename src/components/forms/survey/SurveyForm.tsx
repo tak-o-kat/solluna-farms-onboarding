@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,16 +36,13 @@ import { schema } from "@/utils/zod/surveyFormSchema";
 import type { SurveyFormState } from "@/app/actions/submit-survey";
 import SurveyTitle from "./SurveyTitle";
 import SuccessfullySubmittedSurvey from "./SuccessfullySubmitted";
-import { isCompleted } from "@/app/actions/is-completed";
-import LoadingSpinner from "./LoadingSpinner";
 
 type FormSchema = z.infer<typeof schema>;
 
 export const SurveyForm = ({ id }: { id: string }) => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  const { pending } = useFormStatus();
   const [isCollapsed, setIsCollaped] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [state, formAction] = useFormState(onFormSurveyAction, {
     message: "",
@@ -81,30 +78,9 @@ export const SurveyForm = ({ id }: { id: string }) => {
     );
   };
 
-  // const resp = await apiResp.json();
-
-  // if (resp.isCompleted) {
-  //   router.push("/not-found/survey/invalid");
-  // }
-
   useEffect(() => {
     // needed in order to bypass the course conditional in defaultValutes
     form.setValue("blockchain_course", "false");
-
-    // get the base url to make an api call
-    // const siteUrl = window.location.href.replace(window.location.pathname, "");
-    // console.log("Use effect");
-    // if (state?.status === undefined) {
-    //   fetch(`${siteUrl}/api/url/completed/${id}`, {
-    //     method: "GET",
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       if (data.isCompleted) {
-    //         router.push("/survey/errors/completed");
-    //       }
-    //     });
-    // }
   }, [form, id, router, state.status]);
 
   return (
@@ -124,14 +100,12 @@ export const SurveyForm = ({ id }: { id: string }) => {
               ref={formRef}
               action={formAction}
               onSubmit={form.handleSubmit(() => {
-                setIsSubmitting(true);
                 formRef?.current?.submit();
-                setIsSubmitting(false);
               })}
               className="space-y-8"
             >
               <div
-                className={`${!isSubmitting && "invisible"} ${
+                className={`${!pending && "invisible"} ${
                   isCollapsed ? "h-[26rem]" : "h-[52rem]"
                 } absolute inset-x-auto z-10 flex justify-center items-center  max-w-3xl w-full opacity-0 bg-black`}
               ></div>
@@ -415,12 +389,10 @@ export const SurveyForm = ({ id }: { id: string }) => {
               <Button
                 className="flex flex-row gap-2 w-full sm:w-36"
                 type="submit"
-                disabled={isSubmitting}
+                disabled={pending}
               >
-                {isSubmitting && (
-                  <Loader2Icon className="h-5 w-5 animate-spin" />
-                )}
-                {isSubmitting ? "Submitting" : "Submit"}
+                {pending && <Loader2Icon className="h-5 w-5 animate-spin" />}
+                {pending ? "Submitting" : "Submit"}
               </Button>
             </form>
           </Form>

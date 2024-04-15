@@ -30,14 +30,13 @@ export async function GET(
   const serverDate = d.slice(0, 17);
   const serverTime = d.slice(17, 23);
 
+  // Used this method because I'm unable to make useEffect work properly on the status check
   if (serverDate === dbDate) {
     const diff = parseFloat(serverTime) - parseFloat(dbTime);
-    if (diff < 3) {
+    if (diff < 4) {
       bool = false;
     }
   }
-
-  // console.log(`Is Date/Hour the same: ${serverDate === dbDate}`);
 
   await prisma.$disconnect();
 
