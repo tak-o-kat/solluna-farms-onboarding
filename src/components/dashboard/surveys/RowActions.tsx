@@ -50,14 +50,27 @@ export default function RowActions({ data }: { data: TableData }) {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
+          disabled={data.status === "new"}
           onClick={() => executeStatusUpdateAction(data.id, "new")}
         >
           <span>Mark as New</span>
         </DropdownMenuItem>
         <DropdownMenuItem
+          disabled={data.status === "sent"}
           onClick={() => executeStatusUpdateAction(data.id, "sent")}
         >
           <span>Mark as Sent</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          disabled={true}
+          onClick={() => executeStatusUpdateAction(data.id, "completed")}
+        >
+          <span>Mark as Completed</span>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem disabled={true} onClick={() => console.log("delete")}>
+          <span>Delete Url</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
