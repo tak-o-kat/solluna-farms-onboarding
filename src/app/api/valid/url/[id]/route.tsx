@@ -2,6 +2,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+// ****** No longer needed ********
 export async function GET(
   _request: NextRequest,
   { params }: { params: { id: string } }

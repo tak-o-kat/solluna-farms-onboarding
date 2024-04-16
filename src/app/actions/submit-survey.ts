@@ -24,25 +24,21 @@ export async function onFormSurveyAction(
   if (parsed.success) {
     // First thing to do is check to see if url is still active
     const id = data?.id.toString();
-    const validUrlEndPoint = getIsUrlValid(id);
-    const valid = await fetch(validUrlEndPoint);
-    // check and see if it's a valid url id
-    const validResp = await valid.json();
-    if (validResp.status === 200 && !validResp?.isValid) {
-      // ID is either incorrect or not longer active
-      return {
-        status: 403,
-        message: "Server Error: ID not valid!",
-      };
-    }
+    const endPoint = getIsUrlValid(id);
 
-    const isStatusCompletedEndPoint = getStatusCheckUrl(id);
-
-    const check = await fetch(isStatusCompletedEndPoint);
-    // check and see if it's been completed already
+    const response = await fetch(endPoint);
+    // check if url valid and is completed
     try {
-      const checkResp = await check.json();
-      if (checkResp.status === 200 && checkResp?.isCompleted) {
+      const resp = await response.json();
+      if (resp.status === 200 && !resp?.isValid) {
+        // ID is either incorrect or not longer active
+        return {
+          status: 403,
+          message: "Server Error: ID not valid!",
+        };
+      }
+
+      if (resp.status === 200 && resp?.isCompleted) {
         // ID is either incorrect or not longer active
         return {
           status: 403,
@@ -102,7 +98,7 @@ export async function onFormSurveyAction(
       console.log(err);
       return {
         status: 403,
-        message: "Server Error: ID not valid!",
+        message: `Server Error: ${err.name}`,
       };
     }
   } else {
