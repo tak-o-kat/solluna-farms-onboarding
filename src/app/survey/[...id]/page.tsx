@@ -1,3 +1,5 @@
+"use server";
+
 import { redirect } from "next/navigation";
 
 import { getIsUrlValid, getStatusCheckUrl } from "@/utils/urlBuilder";
@@ -30,16 +32,12 @@ export default async function SurveyPage({
       errorType = "invalid";
     }
 
-    const isStatusCompletedEndPoint = getStatusCheckUrl(id);
-    const check = await fetch(isStatusCompletedEndPoint);
-    const checkResp = await check.json();
-    if (checkResp.status === 200 && checkResp?.isCompleted) {
-      // ID is either incorrect or not longer active
+    if (resp.status === 200 && resp.isCompleted) {
       errorType = "completed";
     }
   } catch (err) {
     console.log(err);
-    redirect(`/surver/errors/server-error`);
+    redirect(`/survey/errors/server-error`);
   }
 
   // Need to redirect outside try/catch or it will redirect to error instead
@@ -53,7 +51,6 @@ export default async function SurveyPage({
   return (
     <div className="flex flex-col w-full max-w-3xl">
       <div className="flex flex-col w-full max-w-3xl px-4 pb-4">
-        {/* <SurveyLoader id={params.id[0]} /> */}
         <SurveyForm id={params.id[0]} />
       </div>
     </div>
