@@ -7,7 +7,6 @@ import { z } from "zod";
 import { nanoid } from "nanoid";
 import { makeSurveyUrl } from "@/utils/urlBuilder";
 import { schema } from "@/utils/zod/urlGeneratorSchema";
-import { generateInsertUrlQuery } from "@/utils/queryBuilder";
 
 // Form Actions
 export const insertUrl = async (

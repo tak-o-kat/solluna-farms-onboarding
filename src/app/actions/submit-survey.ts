@@ -10,6 +10,7 @@ export type SurveyFormState = {
   message: string;
   data?: z.infer<typeof schema>;
   issues?: z.ZodIssue[];
+  submitting?: boolean;
 };
 
 export async function onFormSurveyAction(
@@ -36,19 +37,27 @@ export async function onFormSurveyAction(
     }
 
     const isStatusCompletedEndPoint = getStatusCheckUrl(id);
+
     const check = await fetch(isStatusCompletedEndPoint);
     // check and see if it's been completed already
-    const checkResp = await check.json();
-    if (checkResp.status === 200 && checkResp?.isCompleted) {
-      // ID is either incorrect or not longer active
-      return {
-        status: 403,
-        message: "Server Error: ID already submitted!",
-      };
+    try {
+      const checkResp = await check.json();
+      if (checkResp.status === 200 && checkResp?.isCompleted) {
+        // ID is either incorrect or not longer active
+        return {
+          status: 403,
+          message: "Server Error: ID already submitted!",
+        };
+      }
+    } catch (err) {
+      console.log(err);
     }
+
+    // Need to run another check to see if the algorand address being used
+    // has already been submitted.
+
     // ** make a DB call here **
     const blockchain_course = data.blockchain_course.toString() === "true";
-
     try {
       const survey = await prisma.survey.create({
         data: {
@@ -90,6 +99,7 @@ export async function onFormSurveyAction(
         message: "Success",
       };
     } catch (err: any) {
+      console.log(err);
       return {
         status: 403,
         message: "Server Error: ID not valid!",

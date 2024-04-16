@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useFormState } from "react-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,8 @@ export const SurveyLinkGenerator = ({
     issues?: string[];
   }>;
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [state, formAction] = useFormState(onFormAction, {});
   const form = useForm<FormSchema>({
     resolver: zodResolver(schema),
@@ -53,6 +55,11 @@ export const SurveyLinkGenerator = ({
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
+    // clear the submitting state
+    if (state.status !== undefined) {
+      setIsSubmitting(false);
+    }
+
     if (state.status === 200) {
       toast(`Generated ${state?.numLinks} Urls`, {
         description: "Url's located in Survey table!",
@@ -70,10 +77,11 @@ export const SurveyLinkGenerator = ({
         ref={formRef}
         action={formAction}
         onSubmit={(e) => {
+          e.stopPropagation();
+          setIsSubmitting(true);
           form.handleSubmit(() => {
             formRef?.current?.submit();
           });
-          e.stopPropagation();
         }}
         className="flex flex-row gap-2"
       >
@@ -93,12 +101,10 @@ export const SurveyLinkGenerator = ({
           className="flex flex-row gap-2 w-32"
           variant="outline"
           type="submit"
-          disabled={form.formState.isSubmitted}
+          disabled={isSubmitting}
         >
-          {form.formState.isSubmitted && (
-            <Loader2Icon className="h-4 w-4 animate-spin" />
-          )}
-          {form.formState.isSubmitted ? "Generating" : "Generate"}
+          {isSubmitting && <Loader2Icon className="h-4 w-4 animate-spin" />}
+          {isSubmitting ? "Generating" : "Generate"}
         </Button>
       </form>
     </Form>

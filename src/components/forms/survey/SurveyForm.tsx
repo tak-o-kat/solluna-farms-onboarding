@@ -1,7 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useFormState } from "react-dom";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2Icon } from "lucide-react";
@@ -38,9 +38,8 @@ import SuccessfullySubmittedSurvey from "./SuccessfullySubmitted";
 type FormSchema = z.infer<typeof schema>;
 
 export const SurveyForm = ({ id }: { id: string }) => {
-  const { pending } = useFormStatus();
-  const [isPending, startTransition] = useTransition();
   const [isCollapsed, setIsCollaped] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [state, formAction] = useFormState(onFormSurveyAction, {
     message: "",
@@ -79,7 +78,11 @@ export const SurveyForm = ({ id }: { id: string }) => {
   useEffect(() => {
     // needed in order to bypass the course conditional in defaultValutes
     form.setValue("blockchain_course", "false");
-  }, [form]);
+
+    if (state.status !== undefined) {
+      setIsSubmitting(false);
+    }
+  }, [form, state.status]);
 
   return (
     <>
@@ -94,20 +97,24 @@ export const SurveyForm = ({ id }: { id: string }) => {
             )}
             {state.status === 400 && getServerErrors()}
             <form
-              id="submit-form"
               ref={formRef}
               action={formAction}
-              onSubmit={() =>
-                startTransition(async () => {
-                  form.handleSubmit(() => {
-                    formRef?.current?.submit();
-                  });
-                })
-              }
+              onSubmit={form.handleSubmit(async () => {
+                setIsSubmitting(true);
+                await formRef?.current?.submit();
+              })}
+              // onSubmit={() =>
+              //   startTransition(async () => {
+              //     form.handleSubmit(() => {
+              //       formRef?.current?.submit();
+              //     });
+              //   })
+              // }
               className="space-y-8"
             >
+              <div>{form.formState.isSubmitted}</div>
               <div
-                className={`${!isPending && "invisible"} ${
+                className={`${!isSubmitting && "invisible"} ${
                   isCollapsed ? "h-[26rem]" : "h-[52rem]"
                 } absolute inset-x-auto z-10 flex justify-center items-center  max-w-3xl w-full opacity-0 bg-black`}
               ></div>
@@ -389,12 +396,13 @@ export const SurveyForm = ({ id }: { id: string }) => {
               )}
 
               <Button
+                disabled={isSubmitting}
                 className="flex flex-row gap-2 w-full sm:w-36"
-                type="submit"
-                disabled={isPending}
               >
-                {isPending && <Loader2Icon className="h-5 w-5 animate-spin" />}
-                {isPending ? "Submitting" : "Submit"}
+                {isSubmitting && (
+                  <Loader2Icon className="h-5 w-5 animate-spin" />
+                )}
+                {isSubmitting ? "Submitting" : "Submit"}
               </Button>
             </form>
           </Form>

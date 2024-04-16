@@ -8,7 +8,8 @@ import { type TableData } from "@/components/Surveys";
 
 export default function CopiedColumn({ data }: { data: TableData }) {
   const [isCopied, setIsCopied] = useState(data.isCopied);
-  const [isSubmitting, setIsSubmitting] = useState(data.isCopied);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const executeIsCopiedUpdateAction = async (id: string, bool: boolean) => {
     setIsCopied(bool);
     setIsSubmitting(true);
