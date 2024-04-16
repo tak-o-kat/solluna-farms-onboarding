@@ -16,11 +16,13 @@ import {
 
 import { type TableData } from "@/components/Surveys";
 
+type Status = "new" | "sent" | "completed";
+
 export default function RowActions({ data }: { data: TableData }) {
   const [isUpdating, setIsUpdating] = useState(false);
-  const executeStatusUpdateAction = async (id: string) => {
+
+  const executeStatusUpdateAction = async (id: string, status: Status) => {
     setIsUpdating(true);
-    const status = data.status === "new" ? "sent" : "new";
     const resp = await updateUrlStatus(id, status);
     if (resp.status === 200) {
       toast(resp.message);
@@ -46,13 +48,16 @@ export default function RowActions({ data }: { data: TableData }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        {/* <DropdownMenuItem onClick={() => copyToClipboard()}>
-          <span className="pe-2">{isCopied ? <CopyCheck /> : <Copy />}</span>
-          Copy URL
-        </DropdownMenuItem> */}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => executeStatusUpdateAction(data.id)}>
-          <span>Mark as {data.status === "new" ? "Sent" : "New"}</span>
+        <DropdownMenuItem
+          onClick={() => executeStatusUpdateAction(data.id, "new")}
+        >
+          <span>Mark as New</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => executeStatusUpdateAction(data.id, "sent")}
+        >
+          <span>Mark as Sent</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

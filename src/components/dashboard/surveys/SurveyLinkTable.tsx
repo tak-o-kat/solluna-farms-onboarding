@@ -107,7 +107,7 @@ export const columns: ColumnDef<TableData>[] = [
       const tableRow = row.original;
       return (
         <div className="flex justify-center">
-          <CopiedColumn data={tableRow} />
+          <CopiedColumn url={tableRow.url} />
         </div>
       );
     },
