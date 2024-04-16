@@ -66,7 +66,7 @@ export const insertUrl = async (
       revalidatePath("/dashboard/surveys");
     }
   } else {
-    prisma.$disconnect;
+    await prisma.$disconnect();
     return {
       status: 400,
       message: "Invalid data",

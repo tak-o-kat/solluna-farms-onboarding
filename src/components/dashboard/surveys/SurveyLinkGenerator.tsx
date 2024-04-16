@@ -2,8 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useFormState, useFormStatus } from "react-dom";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useFormState } from "react-dom";
+import { useEffect, useRef } from "react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -42,8 +42,6 @@ export const SurveyLinkGenerator = ({
     issues?: string[];
   }>;
 }) => {
-  const { pending } = useFormStatus();
-  const [isPending, startTransition] = useTransition();
   const [state, formAction] = useFormState(onFormAction, {});
   const form = useForm<FormSchema>({
     resolver: zodResolver(schema),
@@ -60,7 +58,9 @@ export const SurveyLinkGenerator = ({
         description: "Url's located in Survey table!",
       });
     } else if (state.status === 400) {
-      toast(`${state?.message}`);
+      toast(`${state?.message}`, {
+        description: `${state?.issues}`,
+      });
     }
   }, [state]);
 
@@ -70,12 +70,10 @@ export const SurveyLinkGenerator = ({
         ref={formRef}
         action={formAction}
         onSubmit={(e) => {
-          e.stopPropagation();
-          startTransition(async () => {
-            form.handleSubmit(() => {
-              formRef?.current?.submit();
-            });
+          form.handleSubmit(() => {
+            formRef?.current?.submit();
           });
+          e.stopPropagation();
         }}
         className="flex flex-row gap-2"
       >
@@ -85,13 +83,7 @@ export const SurveyLinkGenerator = ({
           render={({ field }) => (
             <FormItem className="w-24">
               <FormControl>
-                <Input
-                  type="number"
-                  min="1"
-                  max="20"
-                  placeholder=""
-                  {...field}
-                />
+                <Input type="number" placeholder="" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -101,10 +93,12 @@ export const SurveyLinkGenerator = ({
           className="flex flex-row gap-2 w-32"
           variant="outline"
           type="submit"
-          disabled={pending}
+          disabled={form.formState.isSubmitted}
         >
-          {isPending && <Loader2Icon className="h-4 w-4 animate-spin" />}
-          {isPending ? "Generating" : "Generate"}
+          {form.formState.isSubmitted && (
+            <Loader2Icon className="h-4 w-4 animate-spin" />
+          )}
+          {form.formState.isSubmitted ? "Generating" : "Generate"}
         </Button>
       </form>
     </Form>

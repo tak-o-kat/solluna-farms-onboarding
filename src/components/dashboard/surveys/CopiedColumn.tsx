@@ -8,17 +8,20 @@ import { type TableData } from "@/components/Surveys";
 
 export default function CopiedColumn({ data }: { data: TableData }) {
   const [isCopied, setIsCopied] = useState(data.isCopied);
+  const [isSubmitting, setIsSubmitting] = useState(data.isCopied);
   const executeIsCopiedUpdateAction = async (id: string, bool: boolean) => {
+    setIsCopied(bool);
+    setIsSubmitting(true);
     const resp = await updateIsCopied(id, bool);
     if (resp.status === 200) {
       toast(`${resp.message} ${data.url}`);
       navigator.clipboard.writeText(data.url);
-      setIsCopied(bool);
     } else if (resp.status >= 400) {
       toast("Something went wrong updating status", {
         description: resp.message,
       });
     }
+    setIsSubmitting(false);
   };
 
   useEffect(() => {
@@ -30,6 +33,7 @@ export default function CopiedColumn({ data }: { data: TableData }) {
       onClick={() => executeIsCopiedUpdateAction(data.id, !isCopied)}
       variant={"ghost"}
       className="flex justify-center font-medium"
+      disabled={isSubmitting}
     >
       {isCopied ? <CopyCheck /> : <Copy />}
     </Button>
