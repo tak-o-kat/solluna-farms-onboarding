@@ -1,14 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Copy, CopyCheck } from "lucide-react";
 
-export default function CopiedColumn({ url }: { url: string }) {
-  const [isCopied, setIsCopied] = useState(false);
+import { type TableData } from "@/components/Surveys";
+
+export default function CopiedColumn({ data }: { data: TableData }) {
+  const [innerIsCopied, setInnerIsCopied] = useState(data.isCopied);
 
   const copyUrl = () => {
-    navigator.clipboard.writeText(url);
-    setIsCopied(true);
+    navigator.clipboard.writeText(data.url);
+    setInnerIsCopied(true);
+    data.isCopied = true;
   };
+
+  useEffect(() => {
+    setInnerIsCopied(data.isCopied);
+  }, [data.isCopied]);
 
   return (
     <Button
@@ -16,7 +23,7 @@ export default function CopiedColumn({ url }: { url: string }) {
       variant={"ghost"}
       className="flex justify-center font-medium"
     >
-      {isCopied ? <CopyCheck /> : <Copy />}
+      {innerIsCopied ? <CopyCheck /> : <Copy />}
     </Button>
   );
 }

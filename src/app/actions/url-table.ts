@@ -34,10 +34,11 @@ export const insertUrl = async (
             data: {
               id: nanoId,
               url: makeSurveyUrl(nanoId),
-              isCopied: false,
               urlStatus: {
                 create: {
                   status: "new",
+                  statusCheck: false,
+                  isCopied: false,
                 },
               },
             },
@@ -74,34 +75,6 @@ export const insertUrl = async (
   }
 };
 
-export const updateIsCopied = async (id: string, bool: boolean) => {
-  try {
-    const resp = await prisma.url.update({
-      where: {
-        id: id,
-      },
-      data: {
-        isCopied: bool,
-      },
-    });
-    const msg = bool ? "Successfully copied" : "Removed copied from";
-    return {
-      status: 200,
-      message: msg,
-    };
-  } catch (err: any) {
-    console.log(err.message);
-    return {
-      status: 400,
-      name: err.name,
-      message: err?.message,
-    };
-  } finally {
-    prisma.$disconnect();
-    revalidatePath("/dashboard/surveys");
-  }
-};
-
 export const updateUrlStatus = async (
   id: string,
   status: "new" | "sent" | "completed"
@@ -113,6 +86,7 @@ export const updateUrlStatus = async (
       },
       data: {
         status: status,
+        isCopied: true,
       },
     });
 

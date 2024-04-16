@@ -7,7 +7,6 @@ export type InsertUrl = {
   id: string;
   url: string;
   status: "new" | "sent" | "completed";
-  isCopied: boolean;
 };
 
 export const generateInsertUrlQuery = async (numLinks: number) => {
@@ -19,7 +18,6 @@ export const generateInsertUrlQuery = async (numLinks: number) => {
       id: nanoId,
       url: makeSurveyUrl(nanoId),
       status: "new",
-      isCopied: false,
       urlStatus: {
         create: {
           status: "new",

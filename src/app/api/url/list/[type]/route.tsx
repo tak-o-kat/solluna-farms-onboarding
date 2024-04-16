@@ -23,6 +23,7 @@ export async function GET(
       urlStatus: {
         select: {
           status: true,
+          isCopied: true,
         },
       },
     },
@@ -40,7 +41,9 @@ export async function GET(
         },
       },
       {
-        isCopied: "desc",
+        urlStatus: {
+          updatedAt: "desc",
+        },
       },
     ],
   });
@@ -50,8 +53,8 @@ export async function GET(
     const mutatedRecord: any = {
       id: record.id,
       status: record.urlStatus?.status as string,
+      isCopied: record.urlStatus?.isCopied as boolean,
       url: record.url,
-      isCopied: record.isCopied,
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
     };

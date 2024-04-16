@@ -10,9 +10,9 @@ export interface TableData {
   url: string;
   nanoId: string;
   status: "new" | "sent" | "completed";
+  isCopied: boolean;
   createdAt: Date | string;
   updatedAt: Date | string;
-  isCopied: boolean;
 }
 
 type statusDropDown = "new-sent" | "new" | "sent" | "completed";
