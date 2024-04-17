@@ -66,7 +66,7 @@ export const SurveyForm = ({ id }: { id: string }) => {
   // The following is only used when server side validation has rcvd an error!
   const getServerErrors = () => {
     return (
-      <div className="text-red-500 mt-2">
+      <div className="text-destructive mt-2">
         <div>{state.message}</div>
         {state?.issues?.map((val, i) => (
           <li key={val.path[0]}>{`${val?.path[0]}: ${val?.message}`}</li>
@@ -93,7 +93,7 @@ export const SurveyForm = ({ id }: { id: string }) => {
           <SurveyTitle />
           <Form {...form}>
             {state.status === 403 && (
-              <div className="text-red-500 mt-2">{state.message}</div>
+              <div className="text-destructive mt-2">{state.message}</div>
             )}
             {state.status === 400 && getServerErrors()}
             <form
