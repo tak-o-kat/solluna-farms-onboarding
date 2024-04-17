@@ -18,7 +18,7 @@ export async function GET(
 
   // Check to see if the form was just submitted, if so update the status check
   if (isCompleted && record?.statusCheck === false) {
-    // Means we just submitted, update Status Check
+    // Means we just submitted, update Status Check, only happens on first submission
     await prisma.urlStatus.update({
       where: {
         urlId: params.id,
