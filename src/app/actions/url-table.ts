@@ -86,7 +86,7 @@ export const updateUrlStatus = async (
       },
       data: {
         status: status,
-        isCopied: true,
+        isCopied: status !== "new",
       },
     });
 
