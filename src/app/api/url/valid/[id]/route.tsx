@@ -13,35 +13,29 @@ export async function GET(
     },
   });
 
-  // In order to display the Successfully submitted view I need to
-  // return false to completed on submittion, if the page reload happens
-  // within a certain time return false else just return as normal.
-  const dbDateTime = record?.updatedAt.toISOString();
-  const dbDate = dbDateTime?.slice(0, 17);
-  const dbTime = dbDateTime?.slice(17, 23) as string;
+  const isValid = record !== null;
+  let isCompleted = record?.status === "completed";
 
-  const d = new Date().toISOString();
-  const serverDate = d.slice(0, 17);
-  const serverTime = d.slice(17, 23);
-
-  // Used this method because I'm unable to make useEffect work properly on the status check
-  let bool = record?.status === "completed";
-  if (serverDate === dbDate) {
-    const diff = parseFloat(serverTime) - parseFloat(dbTime);
-    if (diff < 4) {
-      bool = false;
-    }
+  // Check to see if the form was just submitted, if so update the status check
+  if (isCompleted && record?.statusCheck === false) {
+    // Means we just submitted, update Status Check
+    await prisma.urlStatus.update({
+      where: {
+        urlId: params.id,
+      },
+      data: {
+        statusCheck: true,
+      },
+    });
+    isCompleted = false;
   }
 
   await prisma.$disconnect();
-
-  const isValid = record !== undefined;
-
   const resp = {
     status: 200,
     message: "Success",
     isValid: isValid,
-    isCompleted: bool,
+    isCompleted: isCompleted,
   };
 
   return NextResponse.json(resp);
