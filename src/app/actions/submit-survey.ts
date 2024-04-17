@@ -95,10 +95,13 @@ export async function onFormSurveyAction(
         message: "Success",
       };
     } catch (err: any) {
-      console.log(err);
+      let msg = err.name;
+      if (err.message.includes("account") && err.message.includes("Unique")) {
+        msg = "This account/address has alredy been used!";
+      }
       return {
         status: 403,
-        message: `Server Error: ${err.name}`,
+        message: `Server Error: ${msg}`,
       };
     }
   } else {
