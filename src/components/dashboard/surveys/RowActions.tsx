@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
-import { updateUrlStatus } from "@/app/actions/url-table";
+import { updateUrlStatus } from "@/app/actions/surveyTableActions";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 

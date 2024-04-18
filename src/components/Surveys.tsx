@@ -1,7 +1,7 @@
 import { SurveyLinkTable } from "@/components/dashboard/surveys/SurveyLinkTable";
 import { SurveyLinkGenerator } from "@/components/dashboard/surveys/SurveyLinkGenerator";
 import { getUrlListApi } from "@/utils/urlBuilder";
-import { insertUrl } from "@/app/actions/url-table";
+import { insertUrl } from "@/app/actions/surveyTableActions";
 
 import { cookies } from "next/headers";
 import ReloadTableButton from "./dashboard/surveys/ReloadTableButton";

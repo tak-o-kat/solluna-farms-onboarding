@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2Icon } from "lucide-react";
-import { onFormSurveyAction } from "@/app/actions/submit-survey";
+import { onFormSurveyAction } from "@/app/actions/surveySubmitActions";
 
 import {
   Form,

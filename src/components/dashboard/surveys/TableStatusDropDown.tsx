@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { customRevalidate } from "@/app/actions/url-table";
+import { customRevalidate } from "@/app/actions/surveyTableActions";
 
 import {
   DropdownMenu,
