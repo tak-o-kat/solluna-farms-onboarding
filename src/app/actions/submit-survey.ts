@@ -3,7 +3,6 @@
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { schema } from "@/utils/zod/surveyFormSchema";
-import { getIsUrlValid, getStatusCheckUrl } from "@/utils/urlBuilder";
 import { redirect } from "next/navigation";
 
 export type SurveyFormState = {

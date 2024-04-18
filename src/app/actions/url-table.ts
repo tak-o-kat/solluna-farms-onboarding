@@ -37,7 +37,6 @@ export const insertUrl = async (
               urlStatus: {
                 create: {
                   status: "new",
-                  statusCheck: false,
                   isCopied: false,
                 },
               },

@@ -22,8 +22,3 @@ export const getIsUrlValid = (id: string) => {
   const baseUrl = getBaseUrl();
   return `${baseUrl}/api/url/valid/${id}`;
 };
-
-export const getStatusCheckUrl = (id: string) => {
-  const baseUrl = getBaseUrl();
-  return `${baseUrl}/api/url/completed/${id}`;
-};

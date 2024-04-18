@@ -21,14 +21,13 @@ model Url {
 }
 
 model UrlStatus {
-  id          String   @id @default(cuid())
-  status      String
-  statusCheck Boolean
-  isCopied    Boolean
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  url         Url      @relation(fields: [urlId], references: [id])
-  urlId       String   @unique
+  id        String   @id @default(cuid())
+  status    String
+  isCopied  Boolean
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  url       Url      @relation(fields: [urlId], references: [id])
+  urlId     String   @unique
 
   @@index([urlId], type: Hash)
 }

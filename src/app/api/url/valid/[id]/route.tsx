@@ -16,20 +16,6 @@ export async function GET(
   const isValid = record !== null;
   let isCompleted = record?.status === "completed";
 
-  // Check to see if the form was just submitted, if so update the status check
-  if (isCompleted && record?.statusCheck === false) {
-    // Means we just submitted, update Status Check, only happens on first submission
-    await prisma.urlStatus.update({
-      where: {
-        urlId: params.id,
-      },
-      data: {
-        statusCheck: true,
-      },
-    });
-    isCompleted = false;
-  }
-
   await prisma.$disconnect();
   const resp = {
     status: 200,

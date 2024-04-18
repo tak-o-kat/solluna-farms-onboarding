@@ -103,13 +103,6 @@ export const SurveyForm = ({ id }: { id: string }) => {
                 setIsSubmitting(true);
                 formRef?.current?.submit();
               })}
-              // onSubmit={() =>
-              //   startTransition(async () => {
-              //     form.handleSubmit(() => {
-              //       formRef?.current?.submit();
-              //     });
-              //   })
-              // }
               className="space-y-8"
             >
               <div>{form.formState.isSubmitted}</div>

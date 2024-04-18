@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 
-import { getIsUrlValid, getStatusCheckUrl } from "@/utils/urlBuilder";
+import { getIsUrlValid } from "@/utils/urlBuilder";
 import SurveyLoader from "@/components/forms/survey/SurveyLoader";
 import { SurveyForm } from "@/components/forms/survey/SurveyForm";
 
