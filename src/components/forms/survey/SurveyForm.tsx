@@ -99,9 +99,9 @@ export const SurveyForm = ({ id }: { id: string }) => {
             <form
               ref={formRef}
               action={formAction}
-              onSubmit={form.handleSubmit(async () => {
+              onSubmit={form.handleSubmit(() => {
                 setIsSubmitting(true);
-                await formRef?.current?.submit();
+                formRef?.current?.submit();
               })}
               // onSubmit={() =>
               //   startTransition(async () => {

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { schema } from "@/utils/zod/surveyFormSchema";
 import { getIsUrlValid, getStatusCheckUrl } from "@/utils/urlBuilder";
+import { redirect } from "next/navigation";
 
 export type SurveyFormState = {
   status?: number;
@@ -22,38 +23,10 @@ export async function onFormSurveyAction(
   const parsed = await schema.safeParseAsync(data);
 
   if (parsed.success) {
-    // First thing to do is check to see if url is still active
     const id = data?.id.toString();
-    const endPoint = getIsUrlValid(id);
-
-    const response = await fetch(endPoint);
-    // check if url valid and is completed
-    try {
-      const resp = await response.json();
-      if (resp.status === 200 && !resp?.isValid) {
-        // ID is either incorrect or not longer active
-        return {
-          status: 403,
-          message: "Server Error: ID not valid!",
-        };
-      }
-
-      if (resp.status === 200 && resp?.isCompleted) {
-        // ID is either incorrect or not longer active
-        return {
-          status: 403,
-          message: "Server Error: ID already submitted!",
-        };
-      }
-    } catch (err) {
-      console.log(err);
-    }
-
-    // Need to run another check to see if the algorand address being used
-    // has already been submitted.
+    const blockchain_course = data.blockchain_course.toString() === "true";
 
     // ** make a DB call here **
-    const blockchain_course = data.blockchain_course.toString() === "true";
     try {
       const survey = await prisma.survey.create({
         data: {
@@ -90,15 +63,12 @@ export async function onFormSurveyAction(
       });
 
       await prisma.$disconnect();
-      return {
-        status: 200,
-        message: "Success",
-      };
     } catch (err: any) {
       let msg = err.name;
       if (err.message.includes("account") && err.message.includes("Unique")) {
-        msg = "This account/address has alredy been used!";
+        msg = "This account/address has already been used!";
       }
+      await prisma.$disconnect();
       return {
         status: 403,
         message: `Server Error: ${msg}`,
@@ -111,4 +81,6 @@ export async function onFormSurveyAction(
       issues: parsed.error.issues,
     };
   }
+  // No errors encountered, redirect to success page
+  redirect("/survey/success");
 }
