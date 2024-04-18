@@ -1,3 +1,5 @@
+"use clien";
+
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { customRevalidate } from "@/app/actions/url-table";
@@ -27,9 +29,12 @@ export default function TableStatusDropDown({
         window.location.pathname,
         ""
       );
-      await fetch(`${siteUrl}/api/url/status/${status as statusDropDown}`, {
-        method: "GET",
-      });
+      await fetch(
+        `${siteUrl}/api/dashboard/surveys/status/${status as statusDropDown}`,
+        {
+          method: "GET",
+        }
+      );
       customRevalidate("/dashboard/surveys");
     }
     if (statusType !== status) {

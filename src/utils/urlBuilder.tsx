@@ -13,12 +13,12 @@ export const makeSurveyUrl = (id: string) => {
   return `${baseUrl}/survey/${id}`;
 };
 
-export const getUrlListApi = (status: string) => {
+export const getUrlListApi = (type: string) => {
   const baseUrl = getBaseUrl();
-  return `${baseUrl}/api/url/list/${status}`;
+  return `${baseUrl}/api/dashboard/surveys/table/${type}`;
 };
 
 export const getIsUrlValid = (id: string) => {
   const baseUrl = getBaseUrl();
-  return `${baseUrl}/api/url/valid/${id}`;
+  return `${baseUrl}/api/survey/valid/${id}`;
 };
