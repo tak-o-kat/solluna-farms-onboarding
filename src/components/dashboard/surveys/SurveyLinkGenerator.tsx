@@ -83,13 +83,13 @@ export const SurveyLinkGenerator = ({
             formRef?.current?.submit();
           });
         }}
-        className="flex flex-row gap-2"
+        className="flex flex-row gap-2 w-full"
       >
         <FormField
           control={form.control}
           name="numLinks"
           render={({ field }) => (
-            <FormItem className="w-24">
+            <FormItem className="w-20">
               <FormControl>
                 <Input type="number" placeholder="" {...field} />
               </FormControl>
@@ -98,7 +98,7 @@ export const SurveyLinkGenerator = ({
           )}
         />
         <Button
-          className="flex flex-row gap-2 w-32"
+          className="flex flex-row gap-2 w-full sm:w-36"
           variant="outline"
           type="submit"
           disabled={isSubmitting}

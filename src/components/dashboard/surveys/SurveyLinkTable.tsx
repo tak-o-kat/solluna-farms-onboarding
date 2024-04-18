@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown } from "lucide-react";
+import { ArrowUpDown, ChevronDown, ListRestart } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -93,10 +93,13 @@ export const columns: ColumnDef<TableData>[] = [
     accessorKey: "createdAt",
     header: () => <div className="text-right">Created</div>,
     cell: ({ row }) => {
-      const created: string = row.getValue("createdAt") as string;
+      const createAt = new Date(row.getValue("createdAt"));
+      const [date, time, des] = createAt.toLocaleString().split(" ");
 
       return (
-        <div className="text-right font-medium">{created.slice(0, 10)}</div>
+        <div className="text-right font-medium">{`${
+          date.split(",")[0]
+        } ${time} ${des}`}</div>
       );
     },
   },

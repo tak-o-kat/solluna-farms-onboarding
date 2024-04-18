@@ -4,6 +4,7 @@ import { getUrlListApi } from "@/utils/urlBuilder";
 import { insertUrl } from "@/app/actions/url-table";
 
 import { cookies } from "next/headers";
+import ReloadTableButton from "./dashboard/surveys/ReloadTableButton";
 
 export interface TableData {
   id: string;
@@ -40,8 +41,11 @@ export default async function Surveys() {
   return (
     <div className="flex flex-col flex-1">
       <div className="flex flex-col flex-1 items-start rounded-lg border shadow-sm p-4">
-        <div className="flex flex-col">
+        <div className="flex flex-row w-full justify-between gap-2">
           <SurveyLinkGenerator onFormAction={insertUrl} />
+          <div className="flex flex-row justify-end">
+            <ReloadTableButton />
+          </div>
         </div>
         <SurveyLinkTable data={data} statusType={cookie} />
       </div>
