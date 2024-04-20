@@ -26,7 +26,6 @@ export const protectedServerAction = async () => {
     const baseUrl = `${proto}://${uri}`;
     redirect(`${baseUrl}/api/auth/login`);
   }
-  console.log("finished auth");
 };
 
 // Form Actions
