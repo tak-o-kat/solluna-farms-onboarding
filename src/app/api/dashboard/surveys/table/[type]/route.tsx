@@ -1,13 +1,28 @@
+"use server";
+
 import { NextResponse, NextRequest } from "next/server";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 type statusDropDown = "new-sent" | "new" | "sent" | "completed";
 
-export const dynamic = "force-dynamic";
 export async function GET(
-  request: NextRequest,
+  req: NextRequest,
   { params }: { params: { type: statusDropDown } }
 ) {
+  // Check is requester has access
+  // const { isAuthenticated, getUser, getAccessToken } = getKindeServerSession();
+  // const isAuth = await isAuthenticated();
+  // const user = await getUser();
+  // const token = await getAccessToken();
+
+  // console.log(isAuth);
+
+  // if (!isAuth) {
+  //   redirect("/not-found");
+  // }
+
   // Get the value of the cookie
   const cookieValue = params.type;
   const filteredValue = cookieValue === undefined ? "new-sent" : cookieValue;

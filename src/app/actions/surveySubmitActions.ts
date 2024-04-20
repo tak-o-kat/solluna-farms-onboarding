@@ -1,9 +1,11 @@
 "use server";
 
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { schema } from "@/utils/zod/surveyFormSchema";
 import { redirect } from "next/navigation";
+import { protectedServerAction } from "./surveyTableActions";
 
 export type SurveyFormState = {
   status?: number;

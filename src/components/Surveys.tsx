@@ -1,10 +1,12 @@
+"use server";
+
+import { cookies } from "next/headers";
+
 import { SurveyLinkTable } from "@/components/dashboard/surveys/SurveyLinkTable";
 import { SurveyLinkGenerator } from "@/components/dashboard/surveys/SurveyLinkGenerator";
 import { getUrlListApi } from "@/utils/urlBuilder";
 import { insertUrl } from "@/app/actions/surveyTableActions";
-
-import { cookies } from "next/headers";
-import ReloadTableButton from "./dashboard/surveys/ReloadTableButton";
+import ReloadTableButton from "@/components/dashboard/surveys/ReloadTableButton";
 
 export interface TableData {
   id: string;
@@ -21,9 +23,7 @@ type statusDropDown = "new-sent" | "new" | "sent" | "completed";
 async function getUrlList(cookie: string) {
   // TODO: Check for db health and handle appropriately
   const url = getUrlListApi(cookie);
-  const resp = await fetch(url, {
-    method: "GET",
-  });
+  const resp = await fetch(url);
   const json = await resp.json();
   return json;
 }

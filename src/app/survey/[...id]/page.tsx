@@ -22,6 +22,7 @@ export default async function SurveyPage({
   let errorType: ErrorType = undefined;
   const id = params.id[0];
   try {
+    // run validation check here
     const endPoint = getIsUrlValid(id);
     const response = await fetch(endPoint, {
       method: "GET",

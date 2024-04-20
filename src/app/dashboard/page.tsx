@@ -4,7 +4,6 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 
 import {
   CardTitle,

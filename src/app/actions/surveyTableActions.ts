@@ -1,12 +1,33 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { headers } from "next/headers";
 
 import { nanoid } from "nanoid";
 import { makeSurveyUrl } from "@/utils/urlBuilder";
 import { schema } from "@/utils/zod/urlGeneratorSchema";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+// Function to check if caller is authenticated
+export const protectedServerAction = async () => {
+  const { isAuthenticated } = getKindeServerSession();
+  const isAuth = await isAuthenticated();
+
+  // check if user is authenticated
+  if (!isAuth) {
+    // Not Auth, build the base url and redirect to login page
+    const headersList = headers();
+    const proto = headersList.get("x-forwarded-proto");
+    const uri = headersList.get("x-forwarded-host");
+    const baseUrl = `${proto}://${uri}`;
+    redirect(`${baseUrl}/api/auth/login`);
+  }
+  console.log("finished auth");
+};
 
 // Form Actions
 export const insertUrl = async (
@@ -19,6 +40,7 @@ export const insertUrl = async (
   },
   formData: FormData
 ) => {
+  await protectedServerAction();
   const data = Object.fromEntries(formData);
   const parsed = schema.safeParse(data);
 
@@ -78,7 +100,9 @@ export const updateUrlStatus = async (
   id: string,
   status: "new" | "sent" | "completed"
 ) => {
+  await protectedServerAction();
   try {
+    console.log("trying update url state");
     const data = await prisma.urlStatus.update({
       where: {
         urlId: id,
@@ -108,4 +132,9 @@ export const updateUrlStatus = async (
 
 export const customRevalidate = (tag: string) => {
   revalidateTag(tag);
+};
+
+export const setStatusColumnInCookie = async (value: string) => {
+  await protectedServerAction();
+  cookies().set("statusColumn", value);
 };

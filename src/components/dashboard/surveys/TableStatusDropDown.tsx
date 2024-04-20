@@ -1,8 +1,9 @@
-"use clien";
+"use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
-import { customRevalidate } from "@/app/actions/surveyTableActions";
+import { setStatusColumnInCookie } from "@/app/actions/surveyTableActions";
 
 import {
   DropdownMenu,
@@ -13,34 +14,25 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-type statusDropDown = "new-sent" | "new" | "sent" | "completed";
+type StatusDropDown = "new-sent" | "new" | "sent" | "completed";
 
 export default function TableStatusDropDown({
   statusType,
 }: {
-  statusType: statusDropDown;
+  statusType: StatusDropDown;
 }) {
   const [status, setStatus] = useState<string>(statusType);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
-      // get proto and url
-      const siteUrl = window.location.href.replace(
-        window.location.pathname,
-        ""
-      );
-      await fetch(
-        `${siteUrl}/api/dashboard/surveys/status/${status as statusDropDown}`,
-        {
-          method: "GET",
-        }
-      );
-      customRevalidate("/dashboard/surveys");
+      await setStatusColumnInCookie(status as StatusDropDown);
+      router.refresh();
     }
     if (statusType !== status) {
       fetchData();
     }
-  }, [status, statusType]);
+  }, [status, statusType, router]);
 
   return (
     <DropdownMenu>
@@ -53,7 +45,7 @@ export default function TableStatusDropDown({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <DropdownMenuRadioGroup value={status} onValueChange={setStatus}>
-          <DropdownMenuRadioItem value="new-sent">
+          <DropdownMenuRadioItem value={"new-sent"}>
             New & Sent
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="new">New</DropdownMenuRadioItem>
