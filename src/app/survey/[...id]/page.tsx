@@ -51,9 +51,7 @@ export default async function SurveyPage({
 
   return (
     <div className="flex flex-col w-full max-w-3xl">
-      <div className="flex flex-col w-full max-w-3xl px-4 pb-4">
-        <SurveyForm id={params.id[0]} />
-      </div>
+      <SurveyForm id={params.id[0]} />
     </div>
   );
 }

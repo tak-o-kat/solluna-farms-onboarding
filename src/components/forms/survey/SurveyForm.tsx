@@ -89,7 +89,7 @@ export const SurveyForm = ({ id }: { id: string }) => {
       {state.status === 200 ? (
         <SuccessfullySubmittedSurvey />
       ) : (
-        <div>
+        <div className="relative min-h-full pb-8">
           <SurveyTitle />
           <Form {...form}>
             {state.status === 403 && (
