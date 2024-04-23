@@ -3,7 +3,6 @@
 import { redirect } from "next/navigation";
 
 import { getIsUrlValid } from "@/utils/urlBuilder";
-import SurveyLoader from "@/components/forms/survey/SurveyLoader";
 import { SurveyForm } from "@/components/forms/survey/SurveyForm";
 
 type ErrorType = "invalid" | "completed" | "error" | undefined;
