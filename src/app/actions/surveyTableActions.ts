@@ -33,7 +33,7 @@ export const insertUrl = async (
   _prevState: {
     status?: number;
     numLinks?: number;
-    message?: string;
+    message: string;
     data?: z.infer<typeof schema>;
     issues?: string[];
   },
@@ -101,7 +101,6 @@ export const updateUrlStatus = async (
 ) => {
   await protectedServerAction();
   try {
-    console.log("trying update url state");
     const data = await prisma.urlStatus.update({
       where: {
         urlId: id,

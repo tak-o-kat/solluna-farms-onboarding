@@ -28,7 +28,7 @@ export const SurveyLinkGenerator = ({
   onFormAction: (
     prevState: {
       status?: number;
-      message?: string;
+      message: string;
       numLinks?: number;
       data?: z.infer<typeof schema>;
       issues?: string[];
@@ -36,15 +36,17 @@ export const SurveyLinkGenerator = ({
     data: FormData
   ) => Promise<{
     status?: number;
-    message?: string;
+    message: string;
     numLinks?: number;
     data?: z.infer<typeof schema>;
     issues?: string[];
   }>;
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const [state, formAction] = useFormState(onFormAction, {});
+  const [state, formAction] = useFormState(onFormAction, {
+    message: "",
+    numLinks: 1,
+  });
   const form = useForm<FormSchema>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -99,7 +101,6 @@ export const SurveyLinkGenerator = ({
         />
         <Button
           className="flex flex-row gap-2 w-full sm:w-36"
-          variant="outline"
           type="submit"
           disabled={isSubmitting}
         >
