@@ -6,7 +6,6 @@ import { prisma } from "@/lib/prisma";
 import { columns } from "@/components/dashboard/surveys/Columns";
 import { SurveyLinkTable } from "@/components/dashboard/surveys/SurveyLinkTable";
 import { SurveyLinkGenerator } from "@/components/dashboard/surveys/SurveyLinkGenerator";
-import { getUrlListApi } from "@/utils/urlBuilder";
 import { insertUrl } from "@/app/actions/surveyTableActions";
 import ReloadTableButton from "@/components/dashboard/surveys/ReloadTableButton";
 

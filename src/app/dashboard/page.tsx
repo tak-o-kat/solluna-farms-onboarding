@@ -29,8 +29,13 @@ import {
 } from "lucide-react";
 
 export default async function DashboardPage() {
-  const { isAuthenticated } = getKindeServerSession();
-  const isLoggedIn = await isAuthenticated();
+  async function getTotals() {
+    const data = await prisma?.totals.findMany({});
+    const totals = data?.map((d) => {
+      return [d.type, d.total];
+    });
+    return Object.fromEntries(totals || []);
+  }
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
@@ -39,7 +44,7 @@ export default async function DashboardPage() {
           chunk="0"
           title="Urls Generated"
           icon={LinkIcon}
-          amount={20}
+          amount={totals?.urls_created || 0}
           percentage={100}
           unit="month"
         />
@@ -47,7 +52,7 @@ export default async function DashboardPage() {
           chunk="0"
           title="Urls Sent"
           icon={LinkIcon}
-          amount={16}
+          amount={totals?.urls_sent || 0}
           percentage={100}
           unit="month"
         />

@@ -68,6 +68,20 @@ export const insertUrl = async (
           })
         );
       }
+      await prisma.totals.upsert({
+        where: {
+          type: "urls_created",
+        },
+        update: {
+          total: {
+            increment: numRecords,
+          },
+        },
+        create: {
+          type: "urls_created",
+          total: ids.length,
+        },
+      });
 
       return {
         status: 200,
@@ -108,6 +122,21 @@ export const updateUrlStatus = async (
       data: {
         status: status,
         isCopied: status !== "new",
+      },
+    });
+
+    const total = await prisma.totals.upsert({
+      where: {
+        type: "urls_sent",
+      },
+      create: {
+        type: "urls_sent",
+        total: 1,
+      },
+      update: {
+        total: {
+          increment: 1,
+        },
       },
     });
 
