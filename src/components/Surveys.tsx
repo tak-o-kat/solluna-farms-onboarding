@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-
+import { columns } from "@/components/dashboard/surveys/Columns";
 import { SurveyLinkTable } from "@/components/dashboard/surveys/SurveyLinkTable";
 import { SurveyLinkGenerator } from "@/components/dashboard/surveys/SurveyLinkGenerator";
 import { getUrlListApi } from "@/utils/urlBuilder";
@@ -47,7 +47,7 @@ export default async function Surveys() {
             <ReloadTableButton />
           </div>
         </div>
-        <SurveyLinkTable data={data} statusType={cookie} />
+        <SurveyLinkTable data={data} columns={columns} statusType={cookie} />
       </div>
     </div>
   );
