@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Copy, CopyCheck } from "lucide-react";
 
-import { type TableData } from "@/components/Surveys";
+import { type TableData } from "@/components/dashboard/surveys/Surveys";
 
 export default function CopiedColumn({ data }: { data: TableData }) {
   const [innerIsCopied, setInnerIsCopied] = useState(data.isCopied);

@@ -1,6 +1,8 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { prisma } from "@/lib/prisma";
+
 import { columns } from "@/components/dashboard/surveys/Columns";
 import { SurveyLinkTable } from "@/components/dashboard/surveys/SurveyLinkTable";
 import { SurveyLinkGenerator } from "@/components/dashboard/surveys/SurveyLinkGenerator";
@@ -8,24 +10,70 @@ import { getUrlListApi } from "@/utils/urlBuilder";
 import { insertUrl } from "@/app/actions/surveyTableActions";
 import ReloadTableButton from "@/components/dashboard/surveys/ReloadTableButton";
 
+type statusDropDown = "new-sent" | "new" | "sent" | "completed";
+
 export interface TableData {
   id: string;
   url: string;
   nanoId: string;
-  status: "new" | "sent" | "completed";
+  status: statusDropDown;
   isCopied: boolean;
   createdAt: Date | string;
   updatedAt: Date | string;
 }
 
-type statusDropDown = "new-sent" | "new" | "sent" | "completed";
+async function getUrlList(filteredValue: string) {
+  // Convert the cookie value to a boolean
+  const statusFilter = (
+    filteredValue === "new-sent" ? ["new", "sent"] : [filteredValue]
+  ) as string[];
 
-async function getUrlList(cookie: string) {
-  // TODO: Check for db health and handle appropriately
-  const url = getUrlListApi(cookie);
-  const resp = await fetch(url);
-  const json = await resp.json();
-  return json;
+  const data = await prisma.url.findMany({
+    relationLoadStrategy: "join",
+    include: {
+      urlStatus: {
+        select: {
+          status: true,
+          isCopied: true,
+        },
+      },
+    },
+    where: {
+      urlStatus: {
+        status: {
+          in: statusFilter,
+        },
+      },
+    },
+    orderBy: [
+      {
+        urlStatus: {
+          status: "asc",
+        },
+      },
+      {
+        urlStatus: {
+          updatedAt: "desc",
+        },
+      },
+    ],
+  });
+
+  // Add the urlStatus to the root of the obj
+  const updatedData: TableData[] = data.map((record) => {
+    return {
+      id: record.id,
+      nanoId: record.id,
+      status: record.urlStatus?.status as statusDropDown,
+      isCopied: record.urlStatus?.isCopied as boolean,
+      url: record.url,
+      createdAt: record.createdAt,
+      updatedAt: record.updatedAt,
+    };
+  });
+
+  await prisma.$disconnect();
+  return updatedData;
 }
 
 export default async function Surveys() {

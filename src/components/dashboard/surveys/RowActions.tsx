@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { type TableData } from "@/components/Surveys";
+import { type TableData } from "@/components/dashboard/surveys/Surveys";
 
 type Status = "new" | "sent" | "completed";
 

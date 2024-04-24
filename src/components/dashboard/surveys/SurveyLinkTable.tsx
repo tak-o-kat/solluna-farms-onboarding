@@ -32,7 +32,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { type TableData } from "@/components/Surveys";
+import { type TableData } from "@/components/dashboard/surveys/Surveys";
 import TableStatusDropDown from "./TableStatusDropDown";
 
 type statusDropDown = "new-sent" | "new" | "sent" | "completed";

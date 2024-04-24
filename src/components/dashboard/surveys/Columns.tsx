@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import RowActions from "./RowActions";
 import CopiedColumn from "./CopiedColumn";
 
-import { type TableData } from "@/components/Surveys";
+import { type TableData } from "@/components/dashboard/surveys/Surveys";
 
 export const columns: ColumnDef<TableData>[] = [
   {
