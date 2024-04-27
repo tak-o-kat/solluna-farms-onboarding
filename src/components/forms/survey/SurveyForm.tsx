@@ -103,8 +103,8 @@ export const SurveyForm = ({ id }: { id: string }) => {
           action={formAction}
           onSubmit={(e) => {
             e.stopPropagation();
+            setIsSubmitting(true);
             form.handleSubmit(() => {
-              setIsSubmitting(true);
               formRef?.current?.submit();
             });
           }}
