@@ -1,7 +1,13 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { useEffect, useRef, useState } from "react";
+import {
+  startTransition,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2Icon } from "lucide-react";
@@ -40,7 +46,7 @@ type FormSchema = z.infer<typeof schema>;
 export const SurveyForm = ({ id }: { id: string }) => {
   const [isCollapsed, setIsCollaped] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [isPending, startTransition] = useTransition();
   const [state, formAction] = useFormState(onFormSurveyAction, {
     message: "",
   });
@@ -96,8 +102,10 @@ export const SurveyForm = ({ id }: { id: string }) => {
           ref={formRef}
           action={formAction}
           onSubmit={form.handleSubmit(() => {
-            setIsSubmitting(true);
-            formRef?.current?.submit();
+            startTransition(() => {
+              setIsSubmitting(true);
+              formRef?.current?.submit();
+            });
           })}
           className="space-y-8"
         >
