@@ -101,13 +101,10 @@ export const SurveyForm = ({ id }: { id: string }) => {
         <form
           ref={formRef}
           action={formAction}
-          onSubmit={(e) => {
-            e.stopPropagation();
+          onSubmit={form.handleSubmit(async () => {
             setIsSubmitting(true);
-            form.handleSubmit(() => {
-              formRef?.current?.submit();
-            });
-          }}
+            formRef?.current?.submit();
+          })}
           className="space-y-8"
         >
           <div>{form.formState.isSubmitted}</div>
