@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CustomCard from "@/components/dashboard/home/CustomCards";
+import { prisma } from "@/lib/prisma";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 import { Button } from "@/components/ui/button";
@@ -30,8 +31,8 @@ import {
 
 export default async function DashboardPage() {
   async function getTotals() {
-    const data = await prisma?.totals.findMany({});
-    const totals = data?.map((d) => {
+    const data = await prisma.totals.findMany({});
+    const totals = data.map((d) => {
       return [d.type, d.total];
     });
     return Object.fromEntries(totals || []);
