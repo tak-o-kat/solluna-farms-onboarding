@@ -1,17 +1,15 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import {
-  startTransition,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2Icon } from "lucide-react";
-import { onFormSurveyAction } from "@/app/actions/surveySubmitActions";
+import {
+  onFormSurveyAction,
+  onDataAction,
+} from "@/app/actions/surveySubmitActions";
 
 import {
   Form,
@@ -35,11 +33,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { z, type ZodIssue } from "zod";
 
 import { schema } from "@/utils/zod/surveyFormSchema";
 import SurveyTitle from "./SurveyTitle";
-import SuccessfullySubmittedSurvey from "./SuccessfullySubmitted";
 
 type FormSchema = z.infer<typeof schema>;
 
@@ -47,9 +44,16 @@ export const SurveyForm = ({ id }: { id: string }) => {
   const [isCollapsed, setIsCollaped] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [state, formAction] = useFormState(onFormSurveyAction, {
+  const [state, setState] = useState({
+    statusCode: 0,
     message: "",
+    issues: [] as ZodIssue[],
   });
+  const router = useRouter();
+
+  // const [state, formAction] = useFormState(onFormSurveyAction, {
+  //   message: "",
+  // });
   const form = useForm<FormSchema>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -75,7 +79,7 @@ export const SurveyForm = ({ id }: { id: string }) => {
       <div className="text-destructive mt-2">
         <div>{state.message}</div>
         {state?.issues?.map((val, i) => (
-          <li key={val.path[0]}>{`${val?.path[0]}: ${val?.message}`}</li>
+          <li key={val?.path[0]}>{`${val?.path[0]}: ${val?.message}`}</li>
         ))}
       </div>
     );
@@ -85,31 +89,53 @@ export const SurveyForm = ({ id }: { id: string }) => {
     // needed in order to bypass the course conditional in defaultValutes
     form.setValue("blockchain_course", "false");
 
-    if (state.status !== undefined) {
+    if (state.statusCode !== undefined) {
       setIsSubmitting(false);
     }
-  }, [form, state.status]);
+  }, [form, state.statusCode]);
+
+  const onSubmit = async (data: FormSchema) => {
+    startTransition(async () => {
+      const resp = await onDataAction(data);
+      if (resp.status === 200) {
+        router.push("/survey/success");
+      } else if (resp.status === 500) {
+        setState({
+          ...state,
+          statusCode: 500,
+          message: resp.message,
+        });
+      } else if (resp.status >= 400) {
+        setState({
+          ...state,
+          statusCode: 403,
+          message: resp.message,
+          issues: resp.issues as ZodIssue[],
+        });
+      }
+    });
+  };
 
   return (
     <div className="relative min-h-full pb-8">
       <SurveyTitle />
       <Form {...form}>
-        {state.status === 403 && (
+        {state.statusCode === 500 && (
           <div className="text-destructive mt-2">{state.message}</div>
         )}
-        {state.status === 400 && getServerErrors()}
+        {state.statusCode === 403 && getServerErrors()}
         <form
           ref={formRef}
-          action={formAction}
-          onSubmit={form.handleSubmit(async () => {
-            setIsSubmitting(true);
-            formRef?.current?.submit();
-          })}
+          // action={onDataAction}
+          onSubmit={form.handleSubmit(onSubmit)}
+          // onSubmit={form.handleSubmit(async () => {
+          //   setIsSubmitting(true);
+          //   formRef?.current?.submit();
+          // })}
           className="space-y-8"
         >
-          <div>{form.formState.isSubmitted}</div>
           <div
-            className={`${!isSubmitting && "invisible"} ${
+            className={`${!isPending && "invisible"} ${
               isCollapsed ? "h-[26rem]" : "h-[52rem]"
             } absolute inset-x-auto z-10 flex justify-center items-center  max-w-3xl w-full opacity-0 bg-black`}
           ></div>
@@ -377,11 +403,11 @@ export const SurveyForm = ({ id }: { id: string }) => {
           )}
 
           <Button
-            disabled={isSubmitting}
+            disabled={isPending}
             className="flex flex-row gap-2 w-full sm:w-36"
           >
-            {isSubmitting && <Loader2Icon className="h-5 w-5 animate-spin" />}
-            {isSubmitting ? "Submitting" : "Submit"}
+            {isPending && <Loader2Icon className="h-5 w-5 animate-spin" />}
+            {isPending ? "Submitting" : "Submit"}
           </Button>
         </form>
       </Form>
