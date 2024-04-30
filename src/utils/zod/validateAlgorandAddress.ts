@@ -36,7 +36,6 @@ export async function validateAlgorandAddress(
   // NFD softcheck. Don't waste api calls on bad formatted NFD's
   const nfdRegex = new RegExp("^(.+.algo)$", "g");
   const nfdSoftCheck = nfdRegex.test(address);
-
   const isNfd = nfdSoftCheck && (await isNfdValid(nfdApiUrl));
 
   return isNfd || isValidAddress(address);

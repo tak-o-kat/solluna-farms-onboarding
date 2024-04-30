@@ -33,16 +33,23 @@ export const schema = z.discriminatedUnion("blockchain_course", [
       .trim()
       .refine(validateAlgorandAddress, {
         message: "Invalid NFD or Algorand Address",
-      }),
-    comp_exp: z.enum(["none", "beginner", "intermediate", "advanced"], {
-      required_error: "You need to select an experience.",
-    }),
-    blockchain_exp: z.enum(["none", "beginner", "intermediate", "advanced"], {
-      required_error: "You need to select an experience.",
-    }),
-    nft_exp: z.enum(["none", "beginner", "intermediate", "advanced"], {
-      required_error: "You need to select an experience.",
-    }),
+      })
+      .optional(),
+    comp_exp: z
+      .enum(["none", "beginner", "intermediate", "advanced"], {
+        required_error: "You need to select an experience.",
+      })
+      .optional(),
+    blockchain_exp: z
+      .enum(["none", "beginner", "intermediate", "advanced"], {
+        required_error: "You need to select an experience.",
+      })
+      .optional(),
+    nft_exp: z
+      .enum(["none", "beginner", "intermediate", "advanced"], {
+        required_error: "You need to select an experience.",
+      })
+      .optional(),
   }),
   z.object({
     id: z.string(),
