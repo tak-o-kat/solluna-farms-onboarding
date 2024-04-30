@@ -45,6 +45,7 @@ export const SurveyForm = ({ id }: { id: string }) => {
     statusCode: 0,
     message: "",
     issues: [] as ZodIssue[],
+    prevData: {} as any,
   });
   const router = useRouter();
 
@@ -84,15 +85,30 @@ export const SurveyForm = ({ id }: { id: string }) => {
 
   useEffect(() => {
     // needed in order to bypass the course conditional in defaultValutes
-    form.setValue("blockchain_course", "false");
-
-    if (state.statusCode !== undefined) {
-      setIsSubmitting(false);
+    if (state.statusCode === 0) {
+      form.setValue("blockchain_course", "false");
     }
   }, [form, state.statusCode]);
 
+  const setPrevData = (data: FormSchema | any) => {
+    form.setValue("id", data.id);
+    form.setValue("age", data.age);
+    form.setValue("gender", data.gender);
+    form.setValue("fungi_exp", data.fungi_exp);
+    form.setValue("location", data.location);
+    form.setValue("blockchain_course", data.blockchain_course);
+    form.setValue("address", data?.address);
+    form.setValue("comp_exp", data?.comp_exp);
+    form.setValue("blockchain_exp", data?.blockchain_exp);
+    form.setValue("nft_exp", data?.nft_exp);
+  };
+
   const onSubmit = async (data: FormSchema) => {
     startTransition(async () => {
+      setState({
+        ...state,
+        prevData: data,
+      });
       const resp = await onDataAction(data);
       if (resp.status === 200) {
         router.push("/survey/success");
@@ -102,6 +118,7 @@ export const SurveyForm = ({ id }: { id: string }) => {
           statusCode: 500,
           message: resp.message,
         });
+        setPrevData(data);
       } else if (resp.status >= 400) {
         setState({
           ...state,
@@ -109,6 +126,7 @@ export const SurveyForm = ({ id }: { id: string }) => {
           message: resp.message,
           issues: resp.issues as ZodIssue[],
         });
+        setPrevData(data);
       }
     });
   };
