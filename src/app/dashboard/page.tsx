@@ -1,26 +1,8 @@
 import Link from "next/link";
 import CustomCard from "@/components/dashboard/home/CustomCards";
+import CompletedSurveysTable from "@/components/dashboard/home/CompletedSurveysTable";
 import { prisma } from "@/lib/prisma";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-
-import {
-  CardTitle,
-  CardHeader,
-  CardContent,
-  Card,
-  CardDescription,
-} from "@/components/ui/card";
-import {
-  TableHead,
-  TableRow,
-  TableHeader,
-  TableCell,
-  TableBody,
-  Table,
-} from "@/components/ui/table";
 
 import {
   LinkIcon,
@@ -63,7 +45,7 @@ export default async function DashboardPage() {
           chunk="1"
           title="Surveys Completed"
           icon={FilePen}
-          amount={14}
+          amount={totals?.surveys_completed || 0}
           percentage={100}
           unit="month"
         />
@@ -71,9 +53,14 @@ export default async function DashboardPage() {
           chunk="2"
           title="Total Accounts Tracked"
           icon={WalletMinimal}
-          amount={5}
+          amount={totals?.accounts_tracked || 0}
           percentage={100}
           unit="month"
+        />
+      </div>
+      <div>
+        <CompletedSurveysTable
+          surveyTotals={totals?.surveys_completed as number}
         />
       </div>
     </main>

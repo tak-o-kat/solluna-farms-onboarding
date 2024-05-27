@@ -28,7 +28,7 @@ export default async function CustomCard(props: PropTypes) {
       </CardHeader>
       <CardContent className="p-6">
         <div className="text-2xl font-bold">{props.amount}</div>
-        <p className="text-xs text-muted-foreground">{`+${props.percentage}% in the last ${props.unit}`}</p>
+        {/* <p className="text-xs text-muted-foreground">{`+${props.percentage}% in the last ${props.unit}`}</p> */}
       </CardContent>
     </Card>
   );

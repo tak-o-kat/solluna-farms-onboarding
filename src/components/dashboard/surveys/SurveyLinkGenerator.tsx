@@ -1,10 +1,12 @@
 "use client";
 
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useFormState } from "react-dom";
-import { useEffect, useRef, useState } from "react";
-import { z } from "zod";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { z, type ZodIssue } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,33 +21,18 @@ import {
 import { schema } from "../../../utils/zod/urlGeneratorSchema";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
+import { insertUrlAction } from "@/app/actions/surveyTableActions";
 
 type FormSchema = z.infer<typeof schema>;
 
-export const SurveyLinkGenerator = ({
-  onFormAction,
-}: {
-  onFormAction: (
-    prevState: {
-      status?: number;
-      message: string;
-      numLinks?: number;
-      data?: z.infer<typeof schema>;
-      issues?: string[];
-    },
-    data: FormData
-  ) => Promise<{
-    status?: number;
-    message: string;
-    numLinks?: number;
-    data?: z.infer<typeof schema>;
-    issues?: string[];
-  }>;
-}) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [state, formAction] = useFormState(onFormAction, {
+export const SurveyLinkGenerator = () => {
+  const { user } = useKindeBrowserClient();
+  const [isPending, startTransition] = useTransition();
+  const [state, setState] = useState({
+    statusCode: 0,
     message: "",
-    numLinks: 1,
+    issues: [] as ZodIssue[],
+    prevData: {} as any,
   });
   const form = useForm<FormSchema>({
     resolver: zodResolver(schema),
@@ -53,38 +40,36 @@ export const SurveyLinkGenerator = ({
       numLinks: 1,
     },
   });
+  const router = useRouter();
 
-  const formRef = useRef<HTMLFormElement>(null);
-
-  useEffect(() => {
-    // clear the submitting state
-    if (state.status !== undefined) {
-      setIsSubmitting(false);
-    }
-
-    if (state.status === 200) {
-      toast(`Generated ${state?.numLinks} Urls`, {
-        description: "Url's located in Survey table!",
+  const onSubmit = async (data: FormSchema) => {
+    if (user) {
+      const kindeUser = {
+        id: user?.id,
+        name: `${user?.given_name} ${user?.family_name}`,
+        email: user?.email as string,
+      };
+      startTransition(async () => {
+        const resp = await insertUrlAction(data, kindeUser);
+        if (resp.statusCode === 200) {
+          toast(`Generated ${state?.prevData.numLinks} Urls`, {
+            description: "Url's located in Survey table!",
+          });
+        } else if (state.statusCode === 400) {
+          toast(`${state?.message}`, {
+            description: `${state?.issues}`,
+          });
+        }
       });
-    } else if (state.status === 400) {
-      toast(`${state?.message}`, {
-        description: `${state?.issues}`,
-      });
+    } else {
+      router.push("/api/auth/signin");
     }
-  }, [state]);
+  };
 
   return (
     <Form {...form}>
       <form
-        ref={formRef}
-        action={formAction}
-        onSubmit={(e) => {
-          e.stopPropagation();
-          setIsSubmitting(true);
-          form.handleSubmit(() => {
-            formRef?.current?.submit();
-          });
-        }}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-row gap-2 w-full"
       >
         <FormField
@@ -101,11 +86,10 @@ export const SurveyLinkGenerator = ({
         />
         <Button
           className="flex flex-row gap-2 w-full sm:w-36"
-          type="submit"
-          disabled={isSubmitting}
+          disabled={isPending}
         >
-          {isSubmitting && <Loader2Icon className="h-4 w-4 animate-spin" />}
-          {isSubmitting ? "Generating" : "Generate"}
+          {isPending && <Loader2Icon className="h-4 w-4 animate-spin" />}
+          {isPending ? "Generating" : "Generate"}
         </Button>
       </form>
     </Form>

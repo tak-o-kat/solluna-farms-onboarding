@@ -2,6 +2,7 @@
 
 import { revalidatePath, revalidateTag } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { headers } from "next/headers";
@@ -11,6 +12,9 @@ import { makeSurveyUrl } from "@/utils/urlBuilder";
 import { schema } from "@/utils/zod/urlGeneratorSchema";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+
+type FormSchema = z.infer<typeof schema>;
+type KindeUser = { id: string; name: string; email: string };
 
 // Function to check if caller is authenticated
 export const protectedServerAction = async () => {
@@ -25,6 +29,93 @@ export const protectedServerAction = async () => {
     const uri = headersList.get("x-forwarded-host");
     const baseUrl = `${proto}://${uri}`;
     redirect(`${baseUrl}/api/auth/login`);
+  }
+};
+
+export const insertUrlAction = async (data: FormSchema, user: KindeUser) => {
+  await protectedServerAction();
+  // Get form data and parse it
+  const parsed = await schema.safeParseAsync(data);
+
+  if (parsed.success) {
+    try {
+      // generate url id and connect status to url
+      const numRecords = parsed.data.numLinks;
+      const ids = [];
+      // const queryList = [];
+      for (let i = 0; i < numRecords; i++) {
+        const nanoId = nanoid();
+        // queryList.push({
+        //   id: nanoId,
+        //   creator: userId,
+        //   url: makeSurveyUrl(nanoId),
+        //   urlStatus: {
+        //     create: {
+        //       status: "new",
+        //       isCopied: false,
+        //     },
+        //   },
+        // });
+        ids.push(
+          await prisma.url.create({
+            data: {
+              id: nanoId,
+              creatorId: user.id,
+              creatorName: user.name,
+              creatorEmail: user.email,
+              url: makeSurveyUrl(nanoId),
+              urlStatus: {
+                create: {
+                  status: "new",
+                  isCopied: false,
+                },
+              },
+            },
+            select: {
+              id: true,
+            },
+          })
+        );
+      }
+
+      await prisma.totals.upsert({
+        where: {
+          type: "urls_created",
+        },
+        update: {
+          total: {
+            increment: numRecords,
+          },
+        },
+        create: {
+          type: "urls_created",
+          total: ids.length,
+        },
+      });
+
+      return {
+        statusCode: 200,
+        message: "Successfully added records to database",
+        numLinks: ids.length,
+      };
+    } catch (err: any) {
+      console.log(err.message);
+      return {
+        statusCode: 400,
+        name: err.name,
+        message: err?.message,
+      };
+    } finally {
+      prisma.$disconnect();
+      revalidatePath("/dashboard/surveys");
+    }
+  } else {
+    await prisma.$disconnect();
+    return {
+      statusCode: 400,
+      message: "Invalid data",
+      issues: parsed.error.issues.map((issue) => issue.message),
+    };
   }
 };
 

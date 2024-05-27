@@ -89,7 +89,7 @@ export default async function Surveys() {
     <div className="flex flex-col flex-1">
       <div className="flex flex-col flex-1 items-start rounded-lg border shadow-sm p-4">
         <div className="flex flex-row w-full justify-between gap-2">
-          <SurveyLinkGenerator onFormAction={insertUrl} />
+          <SurveyLinkGenerator />
           <div className="flex flex-row justify-end">
             <ReloadTableButton />
           </div>

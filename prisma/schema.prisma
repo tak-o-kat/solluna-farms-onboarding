@@ -10,12 +10,15 @@ datasource db {
 }
 
 model Url {
-  id        String     @id @unique
-  url       String
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  survey    Survey?
-  urlStatus UrlStatus?
+  id           String     @id @unique
+  creatorId    String
+  creatorName  String
+  creatorEmail String
+  url          String
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  survey       Survey?
+  urlStatus    UrlStatus?
 
   @@index([id], type: Hash)
 }
