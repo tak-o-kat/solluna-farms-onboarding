@@ -45,17 +45,6 @@ export const insertUrlAction = async (data: FormSchema, user: KindeUser) => {
       // const queryList = [];
       for (let i = 0; i < numRecords; i++) {
         const nanoId = nanoid();
-        // queryList.push({
-        //   id: nanoId,
-        //   creator: userId,
-        //   url: makeSurveyUrl(nanoId),
-        //   urlStatus: {
-        //     create: {
-        //       status: "new",
-        //       isCopied: false,
-        //     },
-        //   },
-        // });
         ids.push(
           await prisma.url.create({
             data: {
@@ -113,87 +102,6 @@ export const insertUrlAction = async (data: FormSchema, user: KindeUser) => {
     await prisma.$disconnect();
     return {
       statusCode: 400,
-      message: "Invalid data",
-      issues: parsed.error.issues.map((issue) => issue.message),
-    };
-  }
-};
-
-// Form Actions
-export const insertUrl = async (
-  _prevState: {
-    status?: number;
-    numLinks?: number;
-    message: string;
-    data?: z.infer<typeof schema>;
-    issues?: string[];
-  },
-  formData: FormData
-) => {
-  await protectedServerAction();
-  const data = Object.fromEntries(formData);
-  const parsed = schema.safeParse(data);
-
-  if (parsed.success) {
-    try {
-      // generate url id and connect status to url
-      const numRecords = parsed.data.numLinks;
-      const ids = [];
-      for (let i = 0; i < numRecords; i++) {
-        const nanoId = nanoid();
-        ids.push(
-          await prisma.url.create({
-            data: {
-              id: nanoId,
-              url: makeSurveyUrl(nanoId),
-              urlStatus: {
-                create: {
-                  status: "new",
-                  isCopied: false,
-                },
-              },
-            },
-            select: {
-              id: true,
-            },
-          })
-        );
-      }
-      await prisma.totals.upsert({
-        where: {
-          type: "urls_created",
-        },
-        update: {
-          total: {
-            increment: numRecords,
-          },
-        },
-        create: {
-          type: "urls_created",
-          total: ids.length,
-        },
-      });
-
-      return {
-        status: 200,
-        message: "Successfully added records to database",
-        numLinks: ids.length,
-      };
-    } catch (err: any) {
-      console.log(err.message);
-      return {
-        status: 400,
-        name: err.name,
-        message: err?.message,
-      };
-    } finally {
-      prisma.$disconnect();
-      revalidatePath("/dashboard/surveys");
-    }
-  } else {
-    await prisma.$disconnect();
-    return {
-      status: 400,
       message: "Invalid data",
       issues: parsed.error.issues.map((issue) => issue.message),
     };

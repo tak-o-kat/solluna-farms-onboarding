@@ -39,7 +39,6 @@ type FormSchema = z.infer<typeof schema>;
 
 export const SurveyForm = ({ id }: { id: string }) => {
   const [isCollapsed, setIsCollaped] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [state, setState] = useState({
     statusCode: 0,
@@ -141,12 +140,7 @@ export const SurveyForm = ({ id }: { id: string }) => {
         {state.statusCode === 403 && getServerErrors()}
         <form
           ref={formRef}
-          // action={onDataAction}
           onSubmit={form.handleSubmit(onSubmit)}
-          // onSubmit={form.handleSubmit(async () => {
-          //   setIsSubmitting(true);
-          //   formRef?.current?.submit();
-          // })}
           className="space-y-8"
         >
           <div

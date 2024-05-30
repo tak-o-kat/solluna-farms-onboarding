@@ -14,7 +14,7 @@ export default function DashboardLayout({
   const { theme } = useTheme();
 
   return (
-    <div className="flex flex-row min-h-screen overflow-hidden">
+    <div className="flex flex-row min-h-screen w-full overflow-hidden fixed top-0">
       <Toaster
         theme={theme as "light" | "dark" | "system"}
         expand={false}

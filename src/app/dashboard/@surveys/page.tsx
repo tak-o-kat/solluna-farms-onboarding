@@ -19,19 +19,19 @@ import {
   Table,
 } from "@/components/ui/table";
 
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import SurveyPagination from "./SurveyPagination";
+import SurveyPagination from "@/components/dashboard/home/SurveyPagination";
 
 type PropTypes = {
   surveyTotals: number;
   page: number;
 };
 
-export default async function CompletedSurveysTable(props: PropTypes) {
-  async function getSurveys(skip: number) {
+export default async function CompletedSurveysPage(props: PropTypes) {
+  async function getSurveys(skip: number | undefined) {
+    "use server";
     return await prisma.survey.findMany({
-      skip: skip,
+      skip: skip || 0,
       take: 10,
       orderBy: [
         {
@@ -48,10 +48,10 @@ export default async function CompletedSurveysTable(props: PropTypes) {
       },
     });
   }
-
-  const surveys = await getSurveys(0);
+  const currentPage = props.page;
+  const multiplier = currentPage - 1;
+  const surveys = await getSurveys(multiplier * 10);
   const totalPages = Math.ceil(props.surveyTotals / 10);
-  const currentPage = 1; // determined by the page
   const showing = `${1 + (currentPage - 1) * 10}-${
     10 + (currentPage - 1) * 10
   }`;

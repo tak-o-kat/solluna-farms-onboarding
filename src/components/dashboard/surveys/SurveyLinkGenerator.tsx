@@ -65,7 +65,6 @@ export const SurveyLinkGenerator = () => {
       router.push("/api/auth/signin");
     }
   };
-
   return (
     <Form {...form}>
       <form
