@@ -18,9 +18,15 @@ import {
   TableBody,
   Table,
 } from "@/components/ui/table";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 import { Badge } from "@/components/ui/badge";
 import SurveyPagination from "@/components/dashboard/home/SurveyPagination";
+import ExpandableRow from "@/components/dashboard/home/ExpandableRow";
 
 type PropTypes = {
   surveyTotals: number;
@@ -29,7 +35,6 @@ type PropTypes = {
 
 export default async function CompletedSurveysPage(props: PropTypes) {
   async function getSurveys(skip: number | undefined) {
-    "use server";
     return await prisma.survey.findMany({
       skip: skip || 0,
       take: 10,
@@ -43,6 +48,7 @@ export default async function CompletedSurveysPage(props: PropTypes) {
           select: {
             creatorName: true,
             creatorEmail: true,
+            url: true,
           },
         },
       },
@@ -72,40 +78,18 @@ export default async function CompletedSurveysPage(props: PropTypes) {
               <TableHead className="hidden sm:table-cell">Gender</TableHead>
               <TableHead className="hidden sm:table-cell">Age</TableHead>
               <TableHead className="hidden md:table-cell">Location</TableHead>
-
               <TableHead className="hidden md:table-cell">
                 Blockchain Course?
               </TableHead>
-              <TableHead className="text-right">Date Submitted</TableHead>
+              <TableHead className="hidden md:table-cell">
+                Date Submitted
+              </TableHead>
+              <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {surveys.map((survey) => (
-              <TableRow key={survey.id}>
-                <TableCell>
-                  <div className="font-medium">{survey.url.creatorName}</div>
-                  <div className="hidden text-sm text-muted-foreground md:inline">
-                    {survey.url.creatorEmail}
-                  </div>
-                </TableCell>
-                <TableCell className="capitalize hidden sm:table-cell">
-                  {survey.gender}
-                </TableCell>
-                <TableCell className="hidden sm:table-cell">
-                  {survey.age}
-                </TableCell>
-                <TableCell className="capitalize hidden md:table-cell">
-                  {survey.location}
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  <Badge className="text-xs" variant="secondary">
-                    {survey.blockchain_course ? "Yes" : "No"}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right">
-                  {survey.createdAt.toDateString()}
-                </TableCell>
-              </TableRow>
+              <ExpandableRow key={survey.id} survey={survey} />
             ))}
           </TableBody>
         </Table>

@@ -33,12 +33,10 @@ export default async function DashboardPage({
       <Suspense fallback={<div>Loading...</div>}>
         <TotalsPage totals={totals} />
       </Suspense>
-      <Suspense fallback={<div>Loading...</div>}>
-        <CompletedSurveysPage
-          surveyTotals={totals.surveys_completed}
-          page={page}
-        />
-      </Suspense>
+      <CompletedSurveysPage
+        surveyTotals={totals.surveys_completed}
+        page={page}
+      />
     </main>
   );
 }
