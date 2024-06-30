@@ -16,7 +16,9 @@ export type FormSchema = z.infer<typeof schema>;
 const submitSurvey = async (
   data: FormSchema | any,
   isBlockChainCourse: boolean,
-  id: string
+  id: string,
+  hasNFD: boolean,
+  nfd: string
 ) => {
   await prisma.$transaction([
     prisma.survey.create({
@@ -27,6 +29,8 @@ const submitSurvey = async (
         fungi_exp: data.fungi_exp.toString(),
         blockchain_course: isBlockChainCourse,
         account: isBlockChainCourse ? data?.address?.toString() : null,
+        hasNFD: hasNFD,
+        nfd: nfd || null,
         comp_exp: isBlockChainCourse ? data?.comp_exp?.toString() : null,
         blockchain_exp: isBlockChainCourse
           ? data?.blockchain_exp?.toString()
@@ -70,7 +74,9 @@ const submitSurvey = async (
 const submitSurveyAndUpdateAccountTotal = async (
   data: FormSchema | any,
   isBlockChainCourse: boolean,
-  id: string
+  id: string,
+  hasNFD: boolean,
+  nfd: string
 ) => {
   await prisma.$transaction([
     prisma.survey.create({
@@ -81,6 +87,8 @@ const submitSurveyAndUpdateAccountTotal = async (
         fungi_exp: data.fungi_exp.toString(),
         blockchain_course: isBlockChainCourse,
         account: isBlockChainCourse ? data?.address?.toString() : null,
+        hasNFD: hasNFD,
+        nfd: nfd || null,
         comp_exp: isBlockChainCourse ? data?.comp_exp?.toString() : null,
         blockchain_exp: isBlockChainCourse
           ? data?.blockchain_exp?.toString()
@@ -143,16 +151,45 @@ export const onDataAction = async (data: FormSchema | any) => {
   if (parsed.success) {
     const id = data?.id.toString();
     const blockchain_course = data.blockchain_course.toString() === "true";
+    let hasNFD = false;
+    let nfd = "";
+
+    // Determine the NFD data if it exists
+    const nfdRegex = new RegExp("^(.+.algo)$", "g");
+    if (nfdRegex.test(data.address)) {
+      const nfdApiEndPoint = "https://api.nf.domains/nfd";
+      const defaultParams = "view=tiny&poll=false&nocache=false";
+      const nfdApiUrl = `${nfdApiEndPoint}/${data.address}?${defaultParams}`;
+      const results = await fetch(nfdApiUrl);
+      if (results.ok) {
+        const resp = await results.json();
+        if (resp?.depositAccount) {
+          data.address = resp?.depositAccount as string;
+          hasNFD = true;
+          nfd = resp.name;
+          console.log(data);
+        } else {
+          return {
+            status: 500,
+            message: `NFD Error: ${"NFD account has no deposit account"}`,
+          };
+        }
+      }
+    } else {
+      data.hasNfd = false;
+    }
     // ** make a DB call here **
     try {
       if (blockchain_course) {
         await submitSurveyAndUpdateAccountTotal(
-          parsed.data,
+          data,
           blockchain_course,
-          id
+          id,
+          hasNFD,
+          nfd
         );
       } else {
-        await submitSurvey(parsed.data, blockchain_course, id);
+        await submitSurvey(data, blockchain_course, id, hasNFD, nfd);
       }
 
       await prisma.$disconnect();

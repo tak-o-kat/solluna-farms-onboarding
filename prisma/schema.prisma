@@ -46,6 +46,8 @@ model Survey {
   comp_exp          String?
   blockchain_exp    String?
   nft_exp           String?
+  hasNFD            Boolean
+  nfd               String?
   createdAt         DateTime @default(now()) @map("created_at")
   url               Url      @relation(fields: [urlId], references: [id])
   urlId             String   @unique

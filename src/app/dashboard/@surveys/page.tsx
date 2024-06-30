@@ -18,13 +18,7 @@ import {
   TableBody,
   Table,
 } from "@/components/ui/table";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 
-import { Badge } from "@/components/ui/badge";
 import SurveyPagination from "@/components/dashboard/home/SurveyPagination";
 import ExpandableRow from "@/components/dashboard/home/ExpandableRow";
 

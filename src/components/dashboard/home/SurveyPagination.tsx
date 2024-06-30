@@ -29,9 +29,12 @@ export default function SurveyPagination(props: PropTypes) {
 
   const prevPage = props.currentPage === 1 ? 1 : props.currentPage - 1;
   const nextPage =
-    props.currentPage === props.totalPages
-      ? props.totalPages
+    props.currentPage >= props.totalPages
+      ? props.currentPage
       : props.currentPage + 1;
+
+  console.log(`current page: ${props.currentPage}`);
+  console.log(`total pages: ${props.totalPages}`);
 
   return (
     <div className="flex flex-col">
@@ -40,20 +43,21 @@ export default function SurveyPagination(props: PropTypes) {
           <PaginationItem>
             <PaginationPrevious href={`/dashboard?page=${prevPage}`} />
           </PaginationItem>
-          {new Array(props.totalPages).fill(0).map(
-            (_, index) =>
-              index + 1 >= displayRange[0] &&
-              index + 1 <= displayRange[1] && (
-                <PaginationItem key={index}>
-                  <PaginationLink
-                    href={`/dashboard?page=${index + 1}`}
-                    isActive={props.currentPage === index + 1}
-                  >
-                    {index + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              )
-          )}
+          {props.totalPages > 0 &&
+            new Array(props.totalPages).fill(0).map(
+              (_, index) =>
+                index + 1 >= displayRange[0] &&
+                index + 1 <= displayRange[1] && (
+                  <PaginationItem key={index}>
+                    <PaginationLink
+                      href={`/dashboard?page=${index + 1}`}
+                      isActive={props.currentPage === index + 1}
+                    >
+                      {index + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                )
+            )}
           {props.totalPages > displayPages && props.currentPage < endRange && (
             <PaginationItem>
               <PaginationEllipsis />

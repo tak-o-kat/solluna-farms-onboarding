@@ -34,7 +34,7 @@ export default async function DashboardPage({
         <TotalsPage totals={totals} />
       </Suspense>
       <CompletedSurveysPage
-        surveyTotals={totals.surveys_completed}
+        surveyTotals={totals?.surveys_completed || 0}
         page={page}
       />
     </main>
