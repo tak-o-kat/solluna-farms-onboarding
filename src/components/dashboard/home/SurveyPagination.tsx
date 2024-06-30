@@ -33,9 +33,6 @@ export default function SurveyPagination(props: PropTypes) {
       ? props.currentPage
       : props.currentPage + 1;
 
-  console.log(`current page: ${props.currentPage}`);
-  console.log(`total pages: ${props.totalPages}`);
-
   return (
     <div className="flex flex-col">
       <Pagination>

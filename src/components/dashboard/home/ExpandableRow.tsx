@@ -35,6 +35,7 @@ export default function ExpandableRow(data: any) {
     }
     return account;
   };
+
   return (
     <Collapsible className="w-full" key={data.survey.id} asChild>
       <>
@@ -51,7 +52,7 @@ export default function ExpandableRow(data: any) {
           <TableCell className="hidden sm:table-cell">
             {data.survey.age}
           </TableCell>
-          <TableCell className="capitalize hidden md:table-cell">
+          <TableCell className="capitalize hidden lg:table-cell">
             {data.survey.location}
           </TableCell>
           <TableCell className="hidden md:table-cell">
@@ -59,8 +60,11 @@ export default function ExpandableRow(data: any) {
               {data.survey.blockchain_course ? "Yes" : "No"}
             </Badge>
           </TableCell>
-          <TableCell className="capitalize hidden md:table-cell">
-            {data.survey.createdAt.toString().slice(0, 15)}
+          <TableCell className="capitalize hidden lg:table-cell">
+            {data.survey.fungi_exp}
+          </TableCell>
+          <TableCell className="capitalize">
+            {new Date(data.survey.createdAt).toLocaleString().slice(0, 9)}
           </TableCell>
           <CollapsibleTrigger asChild>
             <TableCell className="text-right">
@@ -74,8 +78,8 @@ export default function ExpandableRow(data: any) {
           </CollapsibleTrigger>
         </TableRow>
         <TableRow>
-          <TableCell className="p-0" colSpan={7}>
-            <CollapsibleContent className="flex p-5 w-full" asChild>
+          <TableCell className="p-0" colSpan={8}>
+            <CollapsibleContent className="flex p-5 w-full min-w-full" asChild>
               <div className="flex flex-col w-full gap-2 sm:gap-4">
                 <div className="grid grid-cols-1 gap-2 sm:gap-4 sm:hidden">
                   <div className="sm:hidden flex flex-col">
@@ -101,7 +105,15 @@ export default function ExpandableRow(data: any) {
                     </span>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 items-center justify-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4">
+                <div className="grid grid-cols-1 items-center justify-between sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4">
+                  <div className="sm:flex sm:flex-col lg:hidden hidden">
+                    <span className="font-semibold">Location:</span>
+                    <span className="capitalize">{data.survey.location}</span>
+                  </div>
+                  <div className="sm:flex sm:flex-col lg:hidden hidden">
+                    <span className="font-semibold">Fungi Experience:</span>
+                    <span className="capitalize">{data.survey.fungi_exp}</span>
+                  </div>
                   <div className="flex flex-col">
                     <span className="font-semibold">Account:</span>
                     <span className="capitalize flex flex-row">
@@ -119,6 +131,16 @@ export default function ExpandableRow(data: any) {
                           <Copy className="h-5 w-5" />
                         )}
                       </button>
+                    </span>
+                  </div>
+                  <div
+                    className={`${
+                      data.survey.hasNFD ? "flex flex-col" : "hidden"
+                    }`}
+                  >
+                    <span className="font-semibold">NFD:</span>
+                    <span className="capitalize">
+                      {data.survey?.nfd || "--"}
                     </span>
                   </div>
                   <div className="flex flex-col">

@@ -76,7 +76,9 @@ export default async function CompletedSurveysTable(props: PropTypes) {
               <TableHead className="hidden md:table-cell">
                 Blockchain Course?
               </TableHead>
-              <TableHead className="text-right">Date Submitted</TableHead>
+              <TableHead className="table-cell text-right">
+                Date Submitted
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
